@@ -18,7 +18,7 @@ const transitPerG=(n,c,prem)=>prem&&premCity(n,c)?n.price*n.premium*netMult(n,'h
 // Exchange lists are fixed once the page has loaded, so each is looked up through a Set built on first use.
 const IX_SET=new WeakMap(),inIxList=(a,c)=>{let s=IX_SET.get(a);if(!s)IX_SET.set(a,s=new Set(a));return s.has(c);};
 const onIx=(n,c)=>CITY[c].au&&n.auIx?inIxList(n.auIx,c):n.ix==='ALL'||Array.isArray(n.ix)&&inIxList(n.ix,c);
-function ixMembers(c){if(XIXM[c])return XIXM[c].members.slice();if(S.myIx[c])return S.myIx[c].members.slice();if(!CITY[c].ix)return [];return (IX_MEM[c]||(IX_MEM[c]=NETS.filter(n=>onIx(n,c)).map(n=>n.id))).slice();}
+function ixMembers(c){if(XIXM[c])return XIXM[c].members.slice();if(S.myIx[c])return [...new Set([...S.myIx[c].members,...rpNets(c)])];if(!CITY[c].ix)return [];return (IX_MEM[c]||(IX_MEM[c]=NETS.filter(n=>onIx(n,c)).map(n=>n.id))).slice();}
 // A city exchange's members only depend on the networks, which are fixed after load.
 const IX_MEM={};
 // LAG: several identical ports bundled into one logical link. Flow hashing is never perfectly even, so a bundle carries ~95% of the sum.

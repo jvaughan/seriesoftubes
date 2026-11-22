@@ -778,6 +778,21 @@ test('F9: a latency contract is late, capped, achievable, paid for its latency a
   assert.deepEqual(g.errors, []);
 });
 
+test('F11: remote ports sell only into your own exchanges, from far networks that accept them', () => {
+  const g = load();
+  g.ev("beginGame('Rules','lon',{mode:'normal',preset:'oncall'});if(UI.pendGame)ACT.pitchSkip();S.cash=1e12;S.lvl=LEVELS.length;for(const c of ['bde','nyc','sao','tok'])ACT.buildPop({city:c})");
+  assert.equal(g.ev('rpOn()'), false, 'F11: nothing to sell without an exchange of your own');
+  assert.equal(g.ev("S.lvl=1;ACT.foundIx({city:'bde'});rpOn()"), false, 'F11: not below customer level 3');
+  g.ev('S.lvl=LEVELS.length');
+  assert.equal(g.ev('BIZ_T.rpeer.l2&&BIZ_T.rpeer.lv'), 3, 'F11: an L2 circuit, from level 3');
+  fail('F11', JSON.parse(g.ev("JSON.stringify(rpCands('bde').filter(x=>{const n=NET[x.net];return n.fed||n.type==='t1'||noRemote(n.id)||!S.pops[x.city]||!n.pops.includes(x.city)||n.pops.some(p=>CITY[p].reg===CITY.bde.reg);}).map(x=>x.net))")), 'every buyer is far away, willing, and starts where it already is');
+  for (let f = 0; f < g.ev('MYIX_FAB.length'); f++) assert.equal(g.ev(`S.myIx.bde.fab=${f};rpMax('bde')`), g.ev(`Math.floor(MYIX_FAB[${f}].max/2)`), 'F11: half the fabric\'s members');
+  assert.ok(g.ev('rpFar(20000)') > 0, 'F11: no distance is ruled out');
+  assert.equal(g.ev('rpFar(RP_KM)'), 0.5, 'F11: the fall-off halves at RP_KM');
+  assert.equal(g.ev("(()=>{const k=4000;S.myIx.bde.members=[];const a=rpPull('bde',k);S.myIx.bde.members=NETS.slice(0,10).map(n=>n.id);return rpPull('bde',k)/a;})()"), 10, 'F11: pull grows with the exchange\'s members');
+  assert.deepEqual(g.errors, []);
+});
+
 // D1–D4: DDoS as networks see it (#242). tests/ddos-model.test.js plays each one in detail.
 const ddFra = (ev) => ev("ACT.start({});if(UI.pendGame)ACT.pitchSkip();S.cash=1e9;S.lvl=4;S.nextFail=1e9;S.nextEvent=1e9;ACT.launchBB({city:'fra'});S.pops.fra.bb.d=40;ACT.buyTransit({city:'fra',net:'cog',tier:1});S.pops.fra.rgen=RG.findIndex(r=>r.fsN===8);S.biz.push({id:'g',type:'game',name:'G',city:'fra',bw:10,rate:1,mood:80,since:0,reqs:[]},{id:'d',type:'dia',name:'D',city:'fra',bw:5,rate:1,mood:80,since:0,reqs:[]});compute()");
 const ddHit = (ev, g) => ev(`S.ev.ddos={id:'x',city:'fra',tgt:'g',vec:'dns',gbps:${g},start:S.day,until:S.day+2,bh:false};compute()`);

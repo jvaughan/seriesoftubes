@@ -141,7 +141,7 @@ function spawnOffer(){if(hyper()){hsSpawn();return;} // a Hyperscaler sells clou
   const bk=broker(),dfR=S.links.some(l=>l.kind==='df'&&l.ready<=S.day),dfO=S.links.some(l=>l.kind==='df'&&l.own&&l.ready<=S.day);
   if(dfR)types.push('wwave','wwave');if(dfO)types.push('dfpair');if(bk){if(dfR)types.push('wwave','wwave','wwave','wwave');if(dfO)types.push('dfpair','dfpair','dfpair');}if(lv>=3)types.push('gpu','gpu','onramp','onramp');if(lv>=4)types.push('ai','ai','hyper','hyper');
   if(lv>=3&&MEGA.some(m=>mine.includes(m.c)))types.push('ingest');if(lv>=4&&MEGA.some(m=>mine.includes(m.c)))types.push('aiwan','aiwan','mtrain');if((lv>=4||bk)&&dfO)types.push('pairs');
-  if(lv>=5)types.push('esport');if(lv>=6&&mine.length>=2)types.push('sov','sov');if(lv>=LC_LV&&mine.length>=2)types.push('lowlat','lowlat');if(lv>=8)types.push('cgame','cgame');if(lv>=9)types.push('metav','metav');if(lv>=11&&MEGA.some(m=>mine.includes(m.c)))types.push('agi');if(lv>=13&&mine.length>=2)types.push('mars');
+  if(rpOn())types.push('rpeer','rpeer');if(lv>=5)types.push('esport');if(lv>=6&&mine.length>=2)types.push('sov','sov');if(lv>=LC_LV&&mine.length>=2)types.push('lowlat','lowlat');if(lv>=8)types.push('cgame','cgame');if(lv>=9)types.push('metav','metav');if(lv>=11&&MEGA.some(m=>mine.includes(m.c)))types.push('agi');if(lv>=13&&mine.length>=2)types.push('mars');
   const br=mine.filter(c=>CITY[c].br);if(br.length)types.push('provedor','provedor','provedor');
   // Countries with thousands of ASNs (Brazil's provedores, US regionals) are full of small ISPs shopping for transit.
   const dense=mine.filter(c=>(CITY_PDB[c]||[])[2]>=2000);if(lv>=2&&dense.length)types.push('isp');
@@ -151,6 +151,7 @@ function spawnOffer(){if(hyper()){hsSpawn();return;} // a Hyperscaler sells clou
   types.push(...coreProducts(mine));
   const t=pick(types),T=BIZ_T[t];
   if(T.lv>lv&&spT.includes(t)){spawnSpot(t,pick(sp.filter(s=>s.t===t)));return;}
+  if(T.rp){rpOffer();return;}
   if(T.event||T.sdwan||T.fiber||T.mega){spawnSpecial(t);return;}
   if(T.nni){const city=pick(fabC),prov=pick(FABS.filter(f=>f.cities.includes(city))).id,bw=pick(T.opts),others=mine.filter(c=>c!==city),city2=T.l2&&others.length?pick(others):null;if(T.l2&&!city2)return;
     const base=pick(BIZ_N.filter(n=>!S.usedNames.includes(n)).concat(BIZ_N)).replace(/ (Inc\.|Co\.|Ltd)$/,'');const name=tr('day_tick.name_via_fab',{name:base,fab:FAB[prov].name});useName(base);

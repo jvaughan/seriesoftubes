@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The project follows
 
 ## [Unreleased]
 
+- Networks far away can now buy a remote port into an exchange you founded. Each one is a circuit from one of your POPs to the exchange, carried on your backbone and paid per Gbps, and its network joins as a member and peers with you; an exchange takes up to half its fabric's member limit in remote ports, on top of its local members. Most requests come from fairly near, and a busy exchange draws networks from farther away than a new one.
+
 ## [5.5.0] — 2026-11-25
 
 - A supercluster leg that is too slow for its latency limit now says it is stalled. Its run row in the Cloud tab shows the path it takes, how slow it is and what would fix it, the NOC marks the region pair red, and the row shows the whole run's fee instead of $0. (#475)

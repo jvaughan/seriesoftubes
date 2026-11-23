@@ -37,3 +37,6 @@
    they take your colour too. The AI button loses its purple-to-pink gradient. */
 :root.serious{--pink:#2F6DB5}
 :root.serious .aibtn{background:var(--me)}
+/* Status colours, muted: good, bad and warning (and eyeballs) without the cartoon brightness. 35-serious-accent.js
+   remaps the same colours where the code writes them out, the map's link load colours included. */
+:root.serious{--ok:#3E9E70;--eye:#2F8A5E;--bad:#CF4D57;--warn:#D99A2E}

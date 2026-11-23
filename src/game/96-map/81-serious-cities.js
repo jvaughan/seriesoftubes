@@ -21,10 +21,10 @@ function scTag(t,big,mine,x,y){const dk=scDark(),id=(big?1:0)|(mine?2:0)|(dk?4:0
     g.lineWidth=4.2;g.strokeStyle=m.halo;g.strokeText(t,0,0.5);g.fillStyle=m.ink;g.fillText(t,0,0.5);});
   blit(e,Math.round((x-e.w/2)*DPR)/DPR,Math.round((y-e.h/2)*DPR)/DPR,e.w,e.h);}
 // The IX hexagon, smaller and next to the dot.
-function scIX(C,p,t,hot,now){const mine=!!S.myIx[C.id],joined=hasIxAt(C.id),Rr=5.5,x=p?12:SC_R[t]+6,y=-7;
+function scIX(C,p,t,hot,now){const mine=!!S.myIx[C.id],joined=hasIxAt(C.id),Rr=7,x=p?14.5:SC_R[t]+7.5,y=-8;
   ctx.fillStyle=hot?(Math.sin(now/180)>0?'#FF4D5E':'#FF8A3D'):mine?SC_ME:joined?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF');
   ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/3*i+Math.PI/6;ctx.lineTo(x+Rr*Math.cos(a),y+Rr*Math.sin(a));}ctx.closePath();ctx.fill();ctx.lineWidth=1.1;ctx.strokeStyle=scEdge();ctx.stroke();
-  ctx.fillStyle=mine||hot?'#fff':'#25313D';ctx.font=`700 5.5px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('IX',x,y+0.3);}
+  ctx.fillStyle=mine||hot?'#fff':'#25313D';ctx.font=`700 7px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('IX',x,y+0.4);}
 // What does not move, in the city's frame: rings, the marker, the IX, an incident.
 function scCityStatic(C,p,t,cs,k,ph,st){const down=st.down,edge=scEdge();
   if(st.feed){ctx.strokeStyle='#FF8A3D';ctx.lineWidth=2.5;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(0,0,22*k,0,7);ctx.stroke();ctx.setLineDash([]);}
@@ -43,10 +43,10 @@ function scCityStatic(C,p,t,cs,k,ph,st){const down=st.down,edge=scEdge();
     // The router model, as the cartoon's badge says it: the vendor's letter, or the class number (none for the starter).
     const rg=p.rgen||0;if(rg>0){const G=RG[rg];ctx.fillStyle='#fff';ctx.font=`700 7.5px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(G.badge||String(G.cls+1),0,0.5);}
     // A backup generator: a small G tag on the left.
-    if(p.gen){ctx.fillStyle=scDark()?'#C9D3DD':'#FFFFFF';ctx.lineWidth=1;ctx.strokeStyle=edge;ctx.fillRect(-15,-3.5,7,7);ctx.strokeRect(-15,-3.5,7,7);
-      ctx.fillStyle='#25313D';ctx.font=`700 5.5px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('G',-11.5,0.4);}}
+    if(p.gen){ctx.fillStyle=scDark()?'#C9D3DD':'#FFFFFF';ctx.lineWidth=1;ctx.strokeStyle=edge;ctx.fillRect(-17.5,-4.5,9,9);ctx.strokeRect(-17.5,-4.5,9,9);
+      ctx.fillStyle='#25313D';ctx.font=`700 7px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('G',-13,0.5);}}
   if(st.ixDraw&&!st.ixHot)scIX(C,p,t,false,0);
-  if(st.inc){const x=p?-12:-SC_R[t]-6,y=p?-10:-7;ctx.fillStyle='#FF4D5E';ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();ctx.lineWidth=1.2;ctx.strokeStyle=edge;ctx.stroke();
+  if(st.inc){const x=p?-13:-SC_R[t]-6,y=p?-12:-7;ctx.fillStyle='#FF4D5E';ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();ctx.lineWidth=1.2;ctx.strokeStyle=edge;ctx.stroke();
     ctx.fillStyle='#fff';ctx.font=`800 8px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',x,y+0.4);}}
 // Zoomed out: the same marks, smaller.
 function scCityFarStatic(C,p,down,sel,hov,ph){const edge=scEdge();ctx.strokeStyle=edge;
@@ -73,7 +73,7 @@ function scDrawCity(C,sx,sy,sc,now,lyOverride,dem){
   const ph=cityPhase(C,p,sel,now),spr=citySprite(C,p,t,cs,kq,ph,st),r=k/kq;
   if(ph.gl>=0)dot(sx,sy,16*k,'rgba(255,77,94,1)',.35+.25*(2*ph.gl/7-1));
   blit(spr,sx-spr.ax*r,sy-spr.ay*r,spr.w*r,spr.h*r);
-  if(ixHot){const on=Math.sin(now/180)>0;stamp('scixhot'+(on?1:0),36,24,18,12,K,sx,sy,()=>{ctx.strokeStyle=scEdge();scIX(C,p,t,true,on?1:-1);},true);}
+  if(ixHot){const on=Math.sin(now/180)>0;stamp('scixhot'+(on?1:0),56,40,28,20,K,sx,sy,()=>{ctx.strokeStyle=scEdge();scIX(C,p,t,true,on?1:-1);},true);}
   if(hot&&p){let y=-6;const pulse=.75+.25*Math.sin(now/200);for(const kk of ['r','t','p','c']){if(!hot[kk])continue;const bx=sx-16*K,by=sy+y*K;dot(bx,by,5.5*K,'#FF4D5E',pulse);
     stamp('schotb|'+HOTL[kk],16,16,8,8,K,bx,by,g=>{g.lineWidth=1.2;g.strokeStyle=scEdge();g.beginPath();g.arc(0,0,5.5,0,7);g.stroke();g.fillStyle='#fff';g.font=`800 7px ${SC_FONT}`;g.textAlign='center';g.textBaseline='middle';g.fillText(HOTL[kk],0,0.5);},true);y+=12;}}
   if(st.off)stamp('scoffer|'+(st.big?2:1),24,22,12,11,K,sx,sy+(-17+Math.sin(now/250)*2)*K,g=>{g.fillStyle='#fff';g.strokeStyle=scEdge();g.lineWidth=1.2;g.beginPath();g.arc(0,0,8,0,7);g.fill();g.stroke();

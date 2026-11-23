@@ -40,14 +40,14 @@ function scCityStatic(C,p,t,cs,k,ph,st){const down=st.down,edge=scEdge();
     ctx.lineWidth=1.3;
     if((p.routers||1)>=2){ctx.fillStyle=down?'#6E7590':SC_ME2;ctx.fillRect(-3.5,-8.5,11,11);ctx.strokeRect(-3.5,-8.5,11,11);}
     ctx.fillStyle=col;ctx.fillRect(-6,-6,12,12);ctx.strokeRect(-6,-6,12,12);
-    // How many routers, when there is more than one (the box behind says "more than one", this says how many).
-    const ro=p.routers||1;if(ro>=2){const t2='×'+ro;ctx.font=`700 7px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';
-      ctx.lineWidth=2.4;ctx.strokeStyle=scDark()?'rgba(12,20,29,.9)':'rgba(255,255,255,.95)';ctx.strokeText(t2,2,-13);ctx.fillStyle=scDark()?'#DCE4EC':'#25313D';ctx.fillText(t2,2,-13);ctx.strokeStyle=edge;}
-    // The router's port speed (what it can do: 100G up to 3.2T), as text to the left of the square, and left of that a
+    // To the left of the square: the router's port speed (what it can do, 100G up to 3.2T) and under it how many routers
+    // there are, when more than one (the box behind says "more than one", this says how many); left of that block, a
     // small G tag for a backup generator.
-    {const sp=RG[p.rgen||0].pn,xr=-9;ctx.font=`700 7px ${SC_FONT}`;const w=ctx.measureText(sp).width;ctx.textAlign='right';ctx.textBaseline='middle';ctx.lineJoin='round';
-      ctx.lineWidth=2.4;ctx.strokeStyle=scDark()?'rgba(12,20,29,.9)':'rgba(255,255,255,.95)';ctx.strokeText(sp,xr,0.5);ctx.fillStyle=scDark()?'#DCE4EC':'#25313D';ctx.fillText(sp,xr,0.5);
-      if(p.gen){const gx=xr-w-3-9;ctx.fillStyle=scDark()?'#C9D3DD':'#FFFFFF';ctx.lineWidth=1;ctx.strokeStyle=edge;ctx.fillRect(gx,-4.5,9,9);ctx.strokeRect(gx,-4.5,9,9);
+    {const sp=RG[p.rgen||0].pn,ro=p.routers||1,cnt=ro>=2?'×'+ro:'',xr=-9,y1=cnt?-3.5:0.5,dk=scDark();
+      ctx.font=`700 7px ${SC_FONT}`;const w=Math.max(ctx.measureText(sp).width,cnt?ctx.measureText(cnt).width:0);
+      ctx.textAlign='right';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=2.4;ctx.strokeStyle=dk?'rgba(12,20,29,.9)':'rgba(255,255,255,.95)';ctx.fillStyle=dk?'#DCE4EC':'#25313D';
+      ctx.strokeText(sp,xr,y1);ctx.fillText(sp,xr,y1);if(cnt){ctx.strokeText(cnt,xr,y1+8);ctx.fillText(cnt,xr,y1+8);}
+      if(p.gen){const gx=xr-w-3-9;ctx.fillStyle=dk?'#C9D3DD':'#FFFFFF';ctx.lineWidth=1;ctx.strokeStyle=edge;ctx.fillRect(gx,-4.5,9,9);ctx.strokeRect(gx,-4.5,9,9);
         ctx.fillStyle='#25313D';ctx.font=`700 7px ${SC_FONT}`;ctx.textAlign='center';ctx.fillText('G',gx+4.5,0.5);}
       ctx.strokeStyle=edge;}}
   if(st.ixDraw&&!st.ixHot)scIX(C,p,t,false,0);

@@ -38,7 +38,7 @@ Object.assign(ACT,{
   </div><div class="menu-plugs"><a class="mplug" href="${SIGNAL}" target="_blank" rel="noopener">💬 ${tr('modal_and_names.join_the_noc_chat')} →</a><a class="mplug" href="${ISSUES}" target="_blank" rel="noopener">🐛 ${tr('modal_and_names.found_a_bug_or_have_an')} →</a></div>`);},
  settings:()=>{UI.setOpen=true;openModal(settingsHtml());},
  settingsClose:()=>{UI.setOpen=false;if(!S||!UI.started)showTitle();else closeModal();},
- prefSet:({v})=>{const [k,b]=String(v).split(':');if(!own(PREF_DEF,k))return;if(k==='serious'){if(pref(k)===(b==='1'))return;setPref(k,b==='1');save(true);location.reload();return;}setPref(k,b==='1');sfx('click');refreshSettings();},
+ prefSet:({v})=>{const [k,b]=String(v).split(':');if(!own(PREF_DEF,k))return;if(k==='realNames'||k==='serious'){if(pref(k)===(b==='1'))return;setPref(k,b==='1');save(true);location.reload();return;}setPref(k,b==='1');sfx('click');refreshSettings();},
  vpSet:({v})=>{diagOn(v==='on');refreshSettings();},
  resetAsk:()=>openModal(`<h2 style="font-size:26px">${tr('game_and_settings.start_a_new_network')}</h2><p class="tagline">${tr('game_and_settings.name_and_everything_it_owns_will',{name:esc(S?S.name:tr('common.your_network'))})}</p><div class="btns">${btn(tr('game_and_settings.delete_and_start_over'),'newgame',{},'red big')}${btn(tr('common.keep_playing'),'closeModal',{},'ghost big')}</div>`),
  whatsNewShow:()=>whatsNew(true,true),

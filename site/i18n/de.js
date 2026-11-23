@@ -6821,6 +6821,8 @@
 "settings.pause_on_outages_that_hurt":"Bei echten Ausfällen pausieren",
 "settings.pause_when_a_customer_is_furious":"Bei wütenden Kunden pausieren",
 "settings.quiet_notifications":"Leise Benachrichtigungen",
+"settings.real_names":"Echte Firmennamen",
+"settings.real_names_note":"Zeigt die echte Firma hinter jedem Wortspiel. Nur in der Anzeige; dein Spielstand behält die Namen aus dem Spiel. Lädt die Seite neu.",
 "settings.saved_on_this_device":"Auf diesem Gerät gespeichert.",
 "settings.serious_tubes":"Serious Tubes",
 "settings.serious_tubes_note":"Diese Röhren meinen es ernst. Tauscht den ursprünglichen Cartoon-Look und die Sprüche gegen etwas viel zu Hochtrabendes.",

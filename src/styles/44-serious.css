@@ -21,3 +21,8 @@
 }
 /* A city panel's header shows its name and facts, without the router's cartoon (the router window still has it). */
 :root.serious .ph .phpic{display:none}
+/* Buttons that were just a magnifier emoji (find in the top bar, traceroute in a city panel), which serious mode takes
+   out of the text: a drawn magnifier instead. */
+:root.serious{--sm-mag:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='M15.5 15.5L21 21'/%3E%3C/svg%3E")}
+:root.serious #hud .chip.find::after,:root.serious .trb::before{content:'';display:inline-block;vertical-align:middle;width:17px;height:17px;background:currentColor;-webkit-mask:var(--sm-mag) center/contain no-repeat;mask:var(--sm-mag) center/contain no-repeat}
+:root.serious .trb::before{width:14px;height:14px}

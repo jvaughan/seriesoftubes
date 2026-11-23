@@ -67,7 +67,7 @@ const SALES_GOLF=['metav','cgame','gpu','stream','isp','edu','host','dia'];
 function salesGolf(d){if(hyper()){hsGolf(d);return;}if(pieGolf(d))return;const mine=Object.keys(S.pops).filter(c=>popUp(c)&&bizCity(c));if(!mine.length)return;
   const t=SALES_GOLF.find(x=>(BIZ_T[x].lv||1)<=lvl());if(!t)return;const T=BIZ_T[t],city=mine.sort((a,b)=>CITY[b].P-CITY[a].P||(a<b?-1:1))[0];
   const list=(T.names||BIZ_N).filter(n=>!S.usedNames.includes(n));const name=list.length?list[Math.floor(slR('golfn|'+d)*list.length)]:(T.names||BIZ_N)[0];useName(name);
-  const o={id:uid(),city,city2:null,name,type:t,bw:T.opts[T.opts.length-1],rate:Math.round((CITY[city].au?T.rate*AU_ARPU:T.rate)*mkt()*0.7),reqs:[],exp:d+40};
+  const o={id:uid(),city,city2:null,name,type:t,bw:T.opts[T.opts.length-1],rate:Math.round((CITY[city].au?bizRate(t)*AU_ARPU:bizRate(t))*mkt()*0.7),reqs:[],exp:d+40};
   const k=salesPromise(o);if(k)o.reqs.push(k);const b=offerCustomer(o);b.by='ceo';b.mk=mkt();S.biz.push(clSign(b));
   toast(tr('sales.ceo_golf',{name:esc(name),city:esc(CITY[city].name),bw:fmtG(o.bw),price:fmt$(o.bw*o.rate)})+(k?' '+tr('sales.ceo_promised',{req:esc(typeof REQS[k].l==='function'?REQS[k].l(o):REQS[k].l)}):''),'goal',[{l:tr('common.show_me'),act:'custGo',args:{id:b.id}}]);sfx('coin');}
 // Declining an offer the CEO likes: about one in three, he already shook hands on it.

@@ -155,7 +155,7 @@ function spawnOffer(){if(hyper()){hsSpawn();return;} // a Hyperscaler sells clou
   if(T.event||T.sdwan||T.fiber||T.mega){spawnSpecial(t);return;}
   if(T.nni){const city=pick(fabC),prov=pick(FABS.filter(f=>f.cities.includes(city))).id,bw=pick(T.opts),others=mine.filter(c=>c!==city),city2=T.l2&&others.length?pick(others):null;if(T.l2&&!city2)return;
     const base=pick(BIZ_N.filter(n=>!S.usedNames.includes(n)).concat(BIZ_N)).replace(/ (Inc\.|Co\.|Ltd)$/,'');const name=tr('day_tick.name_via_fab',{name:base,fab:FAB[prov].name});useName(base);
-    const rate=T.l2?Math.round((150+kmBetween(city,city2)*0.08)*T.km):T.rate;
+    const rate=T.l2?Math.round(l2Per(kmBetween(city,city2),T)):bizRate(t);
     S.offers.push({id:uid(),city,city2,prov,name,type:t,bw,rate,reqs:['nni'],exp:S.day+40});return;}
   let city=(Math.random()<0.65&&mine.length)?pick(mine):pick(OFFC.concat(cnOk()?['pek','sha']:[])),city2=null;
   if(T.l2){city=pick(mine);const pool=(Math.random()<(T.lv>=3?0.8:0.6)?mine:OFFC).filter(c=>c!==city);city2=pick(pool.length?pool:OFFC.filter(c=>c!==city));}
@@ -166,13 +166,13 @@ function spawnOffer(){if(hyper()){hsSpawn();return;} // a Hyperscaler sells clou
   if(t==='provedor')city=pick(br);
   if(t==='isp'&&dense.length&&Math.random()<0.5)city=pick(dense);
   if(t==='hft'){const fin=['nyc','chi','lon','fra','tok','sin','hkg','ams','ash'],mf=mine.filter(c=>fin.includes(c));city=mf.length?pick(mf):pick(mine);city2=pick(fin.filter(c=>c!==city));}
-  let rate=T.l2?Math.round((150+kmBetween(city,city2)*0.08)*T.km*(T.lat?latPay():1)):T.rate;
+  let rate=T.l2?Math.round(l2Per(kmBetween(city,city2),T)*(T.lat?latPay():1)):bizRate(t);
   if(CITY[city].au&&!T.l2&&!T.fiber&&!T.event){rate=Math.round(rate*AU_ARPU);bw=Math.min(bw,pick(T.opts.slice(0,2)));}
   if(T.div&&!reqCan('diverse',{city,city2}))return;
   const reqs=T.div?['diverse']:T.lat?['lat']:[];if((t==='hyper'||t==='ai'||t==='gpu')&&Math.random()<0.4)reqs.push('metro');const pool=Object.keys(REQS).filter(k=>!reqs.includes(k)&&!REQS[k].only&&(!REQS[k].l2||T.l2)&&(!REQS[k].ip||!T.l2)&&reqCan(k,{city,city2}));
   if(Math.random()<(T.lv>=3?0.65:0.3))reqs.push(pick(pool));
   if(T.lv>=3&&Math.random()<0.35){const more=pool.filter(k=>!reqs.includes(k));if(more.length)reqs.push(pick(more));}
-  const r2=Math.round(rate*(1+reqs.reduce((a,k)=>a+REQS[k].bonus,0)));
+  const r2=Math.round(rate*(1+reqs.reduce((a,k)=>a+reqBonus(k,T),0)));
   // A latency ceiling must be one something you can build meets (#273), as diverse paths must be possible.
   const latMax=T.lat?latMaxOf(city,city2):null;if(T.lat&&!(Math.min(latFloor(city,city2),bestLat(city,city2))<=latMax))return;
   S.offers.push({id:uid(),city,city2,name,type:t,bw,rate:r2,reqs,latMax,exp:S.day+40});

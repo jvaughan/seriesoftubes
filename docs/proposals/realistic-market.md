@@ -159,5 +159,11 @@ Mechanics to decide:
 4. Play-test the early, mid and late game in the mode. Tune `MF`.
 5. Phase 2: networks buy transit, which needs a separate design pass first.
 
+**Status (2026-11-23):** steps 1 and 2 are done. The mod id is `forces` (`rule('market')` already exists), it is played
+alone like the other challenge options, and the factors are `MF` in `src/game/40-progress/35-market-forces.js`, applied
+through `bizRate()`, `l2Per()` and `reqBonus()`. Two calls made on the way: latency-priced circuits (`T.lat`: `hft`,
+`lowlat`, `flex`, `mars`) are exempt from the L2 cut, and per-site prices (`sdwan`, `l3vpn`) are not cut; only the km
+formula is.
+
 Sources: TeleGeography IP transit and wavelength pricing posts (2025–26), Cogent FY2025 8-K, Meter and Lightyear DIA
 pricing, Lumen DIA marketplace.

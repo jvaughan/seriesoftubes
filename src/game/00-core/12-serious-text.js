@@ -176,6 +176,7 @@ const SERIOUS_EN={
 "cities.universities_biotech_and_a_carrier":"Universities, biotech and a long-established carrier hotel.",
 "cities.where_the_atlantic_cables_to_africa":"Where the Atlantic cables to Africa’s south land. Load shedding affects the grid.",
 "common.big_league":"Multinational carrier",
+"common.every_customer_type_is_unlocked_go":"Every customer type is unlocked.",
 "common.packet_empire":"Global carrier",
 "common.serious_backbone":"National backbone",
 "common.the_internet":"Internet core",

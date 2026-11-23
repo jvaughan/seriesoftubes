@@ -177,5 +177,14 @@ to 22. In the mode the wholesale types (`MF.rate`: `isp`, `provedor`, `metav`, `
 types keep Classic regional prices: they sell far above their transit anyway. A test checks every city where transit
 is sold (424), every wholesale type, from day 0 to the floors.
 
+That made a thin, dear market the best place to sell (Algiers: 3.6×, one seller), so in the mode wholesale buyers
+also turn up there less often: `mfBuyer(t,c)` keeps an offer with chance `mfDemand(c)` = √(presences / 1000) between
+0.1 and 1, from the same PeeringDB presences (`CITY_PDB[c][1]`) that price the city through `txComp()`. Hubs keep
+every buyer (Frankfurt, London, Ashburn, Singapore, São Paulo); Lagos about half, Cairo 17%, Algiers 10%. Price ×
+demand is then 1 in Frankfurt, 0.36 in Algiers, 1.3 in Lagos, 2.5 in Singapore; where PeeringDB sees fewer than 20
+networks it is under 1 everywhere (tested). It gates random offers (`spawnOffer()`) and spotted ones (`spawnSpot()`);
+the sales desk's golf game and referrals from existing customers are not gated. Classic draws no extra random
+numbers.
+
 Sources: TeleGeography IP transit and wavelength pricing posts (2025–26), Cogent FY2025 8-K, Meter and Lightyear DIA
 pricing, Lumen DIA marketplace.

@@ -59,7 +59,7 @@ function scCityFarStatic(C,p,down,sel,hov,ph){const edge=scEdge();ctx.strokeStyl
     if(p.site2){ctx.fillStyle=col;ctx.fillRect(6,3,5,5);ctx.strokeRect(6,3,5,5);}
     if((p.routers||1)>=2){ctx.fillStyle=down?'#6E7590':SC_ME2;ctx.fillRect(-2.5,-6.5,8,8);ctx.strokeRect(-2.5,-6.5,8,8);}
     ctx.fillStyle=col;ctx.fillRect(-4.5,-4.5,9,9);ctx.strokeRect(-4.5,-4.5,9,9);}
-  else{const t=cTier(C.id),r=SC_FAR[t]*(hov?1.3:1);ctx.fillStyle=hasIxAt(C.id)?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF');ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.stroke();}
+  else{const t=cTier(C.id),r=SC_FAR[t]*(hov?1.5:1);ctx.fillStyle=hasIxAt(C.id)?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF');ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.stroke();}
   if(CM.off.has(C.id)){ctx.fillStyle='#16A866';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p?7:5,p?-6:-5,2.6,0,7);ctx.fill();ctx.stroke();}
   if(CM.inc.has(C.id)){ctx.fillStyle='#FF4D5E';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p?-7:-5,p?-6:-5,2.8,0,7);ctx.fill();ctx.stroke();}}
 // drawCity() with the plain marks: the same states, without the cartoon's random router lights or steam (a busy router
@@ -71,7 +71,7 @@ function scDrawCity(C,sx,sy,sc,now,lyOverride,dem){
   if(dem&&!p&&!sel&&!hov){const rq=Math.round((2+cTier(C.id)*0.3)*sc*4)/4,fill=hasIxAt(C.id)?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF'),S2=Math.ceil(rq*2+4),key='scquiet|'+rq+'|'+fill;
     const e=spriteHas(key)||spriteEntry(key,S2,S2,S2/2,S2/2,g=>{g.translate(S2/2,S2/2);g.fillStyle=fill;g.strokeStyle=scEdge();g.lineWidth=1.1;g.beginPath();g.arc(0,0,rq,0,7);g.fill();g.stroke();});
     blit(e,sx-e.ax,sy-e.ay,e.w,e.h);return;}
-  const t=cTier(C.id),cs=p?1:CSC[t],k=sc*(hov?1.15:1),kq=sprQ(k),K=k*cs;
+  const t=cTier(C.id),cs=p?1:CSC[t],k=sc*(hov?1.4:1),kq=sprQ(k),K=k*cs;
   const ixn=ixName(C.id),ixDraw=!!ixn&&(ixShown(C.id,p)||(hot&&hot.ix)||sel||hov),ixHot=!!(ixDraw&&hot&&hot.ix);
   const st={down:!!down,feed:!!(UI.feed&&UI.feed.has(C.id)),sel:!!sel,inc:CM.inc.has(C.id),ixDraw,ixHot,off:CM.off.has(C.id),big:CM.big.has(C.id)};
   const ph=cityPhase(C,p,sel,now),spr=citySprite(C,p,t,cs,kq,ph,st),r=k/kq;

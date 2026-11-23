@@ -839,6 +839,13 @@ const RN_MAP=Object.freeze({
   'Olympic Pings': 'Olympic Games',
   'Burning Router Festival': 'Burning Man',
   'The Keynote (One More Thing)': 'Apple Keynote',
+  'The Big Game': 'Super Bowl',
+  'Faceplant Infra': 'Meta Infrastructure',
+  'Glacier Slow Storage': 'Amazon S3 Glacier',
+  'Bundeswolke': 'Bundescloud',
+  'Legs Finally Shipped Inc.': 'Meta Reality Labs',
+  'Snack Overflow': 'Stack Overflow',
+  'Kernel Sanders Fried Code': 'KFC',
 
   // AI assistants, launch providers and rockets
   'Co-Pilot Error': 'Copilot',

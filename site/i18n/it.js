@@ -7002,6 +7002,8 @@
 "title.hard_mode_pricey_everything":"Modalità difficile. Tutto carissimo, e la fauna ti vuole morto.",
 "title.how_much_trouble":"Quanti guai vuoi?",
 "title.huge_eyeball_market_pricey":"Enorme mercato di eyeball. Vicini costosi.",
+"title.market_forces_mode":"Modalità Forze di mercato",
+"title.market_forces_mode_desc":"Prezzi realistici: il transito all'ingrosso si vende più caro, i circuiti semplici costano meno, e anche il transito che compri cala di prezzo.",
 "title.name_your_network":"Dai un nome alla tua rete",
 "title.new_in_series_of_tubes_v":"Novità di Series of Tubes {v}",
 "title.one_network_one_knot_no_clock":"Una rete, un nodo da sciogliere. Niente orologio.",

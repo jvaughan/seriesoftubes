@@ -7004,6 +7004,8 @@
 "title.hard_mode_pricey_everything":"Schwerer Modus. Alles teuer, und die Tierwelt will dich tot sehen.",
 "title.how_much_trouble":"Wie viel Ärger darf’s sein?",
 "title.huge_eyeball_market_pricey":"Riesiger Privatkundenmarkt. Teure Nachbarn.",
+"title.market_forces_mode":"Marktkräfte-Modus",
+"title.market_forces_mode_desc":"Preise wie in der echten Welt: Wholesale-Transit bringt mehr, einfache Leitungen weniger, und eingekaufter Transit wird auch billiger.",
 "title.name_your_network":"Gib deinem Netz einen Namen",
 "title.new_in_series_of_tubes_v":"Neu in Series of Tubes {v}",
 "title.one_network_one_knot_no_clock":"Ein Netz, ein Knoten zum Entwirren. Keine Uhr.",

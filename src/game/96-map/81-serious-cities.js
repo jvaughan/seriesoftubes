@@ -3,6 +3,8 @@
    behind it for a second router, a small linked one for the second building), text labels with a halo instead of
    pills. What the game says with them stays: the IX hexagon, incidents, hot badges, offer bubbles, rings, glow.
    The cartoon functions are left as they are; this only reassigns them, once, at load. */
+// Your network's colour on the serious map: deep blue (the cartoon map's pink is the game's own).
+const SC_ME='#2F6DB5',SC_ME2='#1F4F8A';
 const SC_FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 const SC_R=[2.6,3.2,3.9,4.7,5.6]; // a city's dot by tier (cTier 0 to 4)
 const SC_FAR=[2.2,2.6,3.1,3.7,4.4];
@@ -12,40 +14,40 @@ const scEdge=()=>scDark()?'#0B121A':'#2B3744';
 const SC_K=new Map();
 function scTag(t,big,mine,x,y){const dk=scDark(),id=(big?1:0)|(mine?2:0)|(dk?4:0);let L=SC_K.get(t);if(!L){if(SC_K.size>4000)SC_K.clear();SC_K.set(t,L=[]);}
   let m=L[id];if(!m){const font=`${mine?700:600} ${big?12.5:11.5}px ${SC_FONT}`;ctx.save();ctx.font=font;const w=ctx.measureText(t).width;ctx.restore();
-    L[id]=m={font,w,ink:mine?(dk?'#FF8DBF':'#B0145A'):(dk?'#DCE4EC':'#25313D'),halo:dk?'rgba(12,20,29,.92)':'rgba(255,255,255,.95)',k:'sctag|'+id+'|'+t};}
+    L[id]=m={font,w,ink:mine?(dk?'#8DB8F0':'#1F5A9E'):(dk?'#DCE4EC':'#25313D'),halo:dk?'rgba(12,20,29,.92)':'rgba(255,255,255,.95)',k:'sctag|'+id+'|'+t};}
   const W=Math.ceil(m.w+8),H=18;
   const e=spriteHas(m.k)||spriteEntry(m.k,W,H,W/2,H/2,g=>{g.translate(W/2,H/2);g.font=m.font;g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';
     g.lineWidth=4.2;g.strokeStyle=m.halo;g.strokeText(t,0,0.5);g.fillStyle=m.ink;g.fillText(t,0,0.5);});
   blit(e,Math.round((x-e.w/2)*DPR)/DPR,Math.round((y-e.h/2)*DPR)/DPR,e.w,e.h);}
 // The IX hexagon, smaller and next to the dot.
 function scIX(C,p,t,hot,now){const mine=!!S.myIx[C.id],joined=hasIxAt(C.id),Rr=5.5,x=p?12:SC_R[t]+6,y=-7;
-  ctx.fillStyle=hot?(Math.sin(now/180)>0?'#FF4D5E':'#FF8A3D'):mine?'#E0457B':joined?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF');
+  ctx.fillStyle=hot?(Math.sin(now/180)>0?'#FF4D5E':'#FF8A3D'):mine?SC_ME:joined?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF');
   ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/3*i+Math.PI/6;ctx.lineTo(x+Rr*Math.cos(a),y+Rr*Math.sin(a));}ctx.closePath();ctx.fill();ctx.lineWidth=1.1;ctx.strokeStyle=scEdge();ctx.stroke();
   ctx.fillStyle=mine||hot?'#fff':'#25313D';ctx.font=`700 5.5px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('IX',x,y+0.3);}
 // What does not move, in the city's frame: rings, the marker, the IX, an incident.
 function scCityStatic(C,p,t,cs,k,ph,st){const down=st.down,edge=scEdge();
   if(st.feed){ctx.strokeStyle='#FF8A3D';ctx.lineWidth=2.5;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(0,0,22*k,0,7);ctx.stroke();ctx.setLineDash([]);}
-  if(st.sel){ctx.strokeStyle='#E0457B';ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.lineDashOffset=-ph.sel;ctx.beginPath();ctx.arc(0,0,17*k,0,7);ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;}
+  if(st.sel){ctx.strokeStyle=SC_ME;ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.lineDashOffset=-ph.sel;ctx.beginPath();ctx.arc(0,0,17*k,0,7);ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;}
   if(ph.dd>=0){ctx.strokeStyle='#FF4D5E';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.lineDashOffset=ph.dd;ctx.beginPath();ctx.arc(0,0,20*k,0,7);ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;}
   ctx.scale(k*cs,k*cs);ctx.strokeStyle=edge;
   if(!p){const r=SC_R[t];
     if(t===4){ctx.lineWidth=0.9;ctx.beginPath();ctx.arc(0,0,r+2.6,0,7);ctx.stroke();}
     ctx.fillStyle=hasIxAt(C.id)?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF');ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.stroke();}
-  else{const col=down?'#8A91A8':'#E0457B';
+  else{const col=down?'#8A91A8':SC_ME;
     if(p.site2){const dB=siteDown(C.id,'b'),cut=p.ringcut>S.day;ctx.lineWidth=1.2;ctx.setLineDash(cut?[2,3]:[]);ctx.strokeStyle=cut?'#FF4D5E':edge;
       ctx.beginPath();ctx.moveTo(5,3);ctx.lineTo(12,7);ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle=edge;ctx.fillStyle=dB?'#8A91A8':col;ctx.fillRect(11,4,7,7);ctx.strokeRect(11,4,7,7);}
     ctx.lineWidth=1.3;
-    if((p.routers||1)>=2){ctx.fillStyle=down?'#6E7590':'#B8336A';ctx.fillRect(-3.5,-8.5,11,11);ctx.strokeRect(-3.5,-8.5,11,11);}
+    if((p.routers||1)>=2){ctx.fillStyle=down?'#6E7590':SC_ME2;ctx.fillRect(-3.5,-8.5,11,11);ctx.strokeRect(-3.5,-8.5,11,11);}
     ctx.fillStyle=col;ctx.fillRect(-6,-6,12,12);ctx.strokeRect(-6,-6,12,12);}
   if(st.ixDraw&&!st.ixHot)scIX(C,p,t,false,0);
   if(st.inc){const x=p?-12:-SC_R[t]-6;ctx.fillStyle='#FF4D5E';ctx.beginPath();ctx.arc(x,-7,5,0,7);ctx.fill();ctx.lineWidth=1.2;ctx.strokeStyle=edge;ctx.stroke();
     ctx.fillStyle='#fff';ctx.font=`800 8px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',x,-6.6);}}
 // Zoomed out: the same marks, smaller.
 function scCityFarStatic(C,p,down,sel,hov,ph){const edge=scEdge();ctx.strokeStyle=edge;
-  if(sel){ctx.strokeStyle='#E0457B';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.lineDashOffset=-ph;ctx.beginPath();ctx.arc(0,0,p?11:8,0,7);ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;ctx.strokeStyle=edge;}
-  if(p){const col=down?'#8A91A8':'#E0457B';ctx.lineWidth=1.2;
+  if(sel){ctx.strokeStyle=SC_ME;ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.lineDashOffset=-ph;ctx.beginPath();ctx.arc(0,0,p?11:8,0,7);ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;ctx.strokeStyle=edge;}
+  if(p){const col=down?'#8A91A8':SC_ME;ctx.lineWidth=1.2;
     if(p.site2){ctx.fillStyle=col;ctx.fillRect(6,3,5,5);ctx.strokeRect(6,3,5,5);}
-    if((p.routers||1)>=2){ctx.fillStyle=down?'#6E7590':'#B8336A';ctx.fillRect(-2.5,-6.5,8,8);ctx.strokeRect(-2.5,-6.5,8,8);}
+    if((p.routers||1)>=2){ctx.fillStyle=down?'#6E7590':SC_ME2;ctx.fillRect(-2.5,-6.5,8,8);ctx.strokeRect(-2.5,-6.5,8,8);}
     ctx.fillStyle=col;ctx.fillRect(-4.5,-4.5,9,9);ctx.strokeRect(-4.5,-4.5,9,9);}
   else{const t=cTier(C.id),r=SC_FAR[t]*(hov?1.3:1);ctx.fillStyle=hasIxAt(C.id)?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF');ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.stroke();}
   if(CM.off.has(C.id)){ctx.fillStyle='#16A866';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p?7:5,p?-6:-5,2.6,0,7);ctx.fill();ctx.stroke();}
@@ -68,7 +70,7 @@ function scDrawCity(C,sx,sy,sc,now,lyOverride,dem){
   if(hot&&p){let y=-6;const pulse=.75+.25*Math.sin(now/200);for(const kk of ['r','t','p','c']){if(!hot[kk])continue;const bx=sx-16*K,by=sy+y*K;dot(bx,by,5.5*K,'#FF4D5E',pulse);
     stamp('schotb|'+HOTL[kk],16,16,8,8,K,bx,by,g=>{g.lineWidth=1.2;g.strokeStyle=scEdge();g.beginPath();g.arc(0,0,5.5,0,7);g.stroke();g.fillStyle='#fff';g.font=`800 7px ${SC_FONT}`;g.textAlign='center';g.textBaseline='middle';g.fillText(HOTL[kk],0,0.5);},true);y+=12;}}
   if(st.off)stamp('scoffer|'+(st.big?2:1),24,22,12,11,K,sx,sy+(-17+Math.sin(now/250)*2)*K,g=>{g.fillStyle='#fff';g.strokeStyle=scEdge();g.lineWidth=1.2;g.beginPath();g.arc(0,0,8,0,7);g.fill();g.stroke();
-    g.fillStyle=st.big?'#B0145A':'#16A866';g.font=`800 ${st.big?8:10}px ${SC_FONT}`;g.textAlign='center';g.textBaseline='middle';g.fillText(st.big?'$$':'$',0,0.5);},true);
+    g.fillStyle=st.big?'#1F5A9E':'#16A866';g.font=`800 ${st.big?8:10}px ${SC_FONT}`;g.textAlign='center';g.textBaseline='middle';g.fillText(st.big?'$$':'$',0,0.5);},true);
   if(CM.dish&&p&&CM.dish.has(C.id))dishBadge(sx+14*k,sy-10*k,CM.dish.get(C.id),CM.dl&&CM.dl[C.id],k);
   if((cam.z>=0.62||p||sel||hov)&&(lyOverride!==null||hov)){const ly=lyOverride==null?sy+12*sc+6:lyOverride;scTag(C.name,!!p,!!p,sx,ly);}}
 // Pills become text with a halo; the dark tooltip pill stays as it is.

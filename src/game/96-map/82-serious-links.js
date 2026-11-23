@@ -4,4 +4,5 @@
 const slLook0=linkLook;
 function slLinkLook(grp,day){const L=slLook0(grp,day),many=grp.length>1;
   L.w0=L.vx?1.2:(1.6+Math.max(...grp.map(tierW))*1.0+(many?Math.min(0.9,(grp.length-1)*0.3):0));L.pk=0;return L;}
-if(pref('serious'))linkLook=slLinkLook;
+// The link being dragged out is drawn in your colour too (DRAG_PINK is read when it draws).
+if(pref('serious')){linkLook=slLinkLook;const c=glColor('#2F6DB5');for(let i=0;i<4;i++)DRAG_PINK[i]=c[i];}

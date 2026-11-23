@@ -844,6 +844,7 @@ const RN_MAP=Object.freeze({
   'Glacier Slow Storage': 'Amazon S3 Glacier',
   'Bundeswolke': 'Bundescloud',
   'Legs Finally Shipped Inc.': 'Meta Reality Labs',
+  'Meh-taverse': 'Metaverse',
   'Snack Overflow': 'Stack Overflow',
   'Kernel Sanders Fried Code': 'KFC',
 

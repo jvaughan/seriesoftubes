@@ -1,4 +1,4 @@
-/* Serious map, type and corners (with 44-serious.css): the cartoon look leans on very heavy weights (800 and 900 in 130-odd rules)
+/* Serious map, type, sizes and corners (with 44-serious.css): the cartoon look leans on very heavy weights (800 and 900 in 130-odd rules)
    and on Baloo 2 and Nunito, named directly in the stylesheets and in the map's canvas text. When the setting is on,
    once at load: the page's own style rules get lighter weights and the system sans-serif, and every font set on a
    canvas is rewritten the same way (cable names, floaters, badges). Nothing changes with it off. */
@@ -15,6 +15,9 @@ const sfRad=v=>!v||v.includes('%')?v:v.replace(/([\d.]+)px/g,(m,n)=>Math.min(+n,
 function sfRules(rules){for(const r of rules){if(r.cssRules&&!r.style){sfRules(r.cssRules);continue;}const s=r.style;if(!s)continue;
   const w=SF_W[s.fontWeight];if(w)s.fontWeight=w;
   for(const k of SF_RK){const v=s[k];if(v){const c=sfRad(v);if(c!==v)s[k]=c;}}
+  // Text over 12px is squeezed: 14px becomes 13, an 18px heading 15.5, a 30px title 22. Not the top bar, whose
+  // sizes 44-serious.css sets itself.
+  const fs=/^([\d.]+)px$/.exec(s.fontSize||'');if(fs&&+fs[1]>12&&!/#hud|serious/.test(r.selectorText||''))s.fontSize=(Math.round((12+(fs[1]-12)*0.55)*2)/2)+'px';
   if(/Baloo|Nunito/.test(s.fontFamily||''))s.fontFamily=SF_STACK;
   if(r.cssRules)sfRules(r.cssRules);}}
 function seriousFonts(){

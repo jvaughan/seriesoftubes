@@ -52,7 +52,17 @@ function scCityFarStatic(C,p,down,sel,hov,ph){const edge=scEdge();ctx.strokeStyl
   else{const t=cTier(C.id),r=SC_FAR[t]*(hov?1.3:1);ctx.fillStyle=hasIxAt(C.id)?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF');ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.stroke();}
   if(CM.off.has(C.id)){ctx.fillStyle='#16A866';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p?7:5,p?-6:-5,2.6,0,7);ctx.fill();ctx.stroke();}
   if(CM.inc.has(C.id)){ctx.fillStyle='#FF4D5E';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p?-7:-5,p?-6:-5,2.8,0,7);ctx.fill();ctx.stroke();}}
-// drawCity() with the plain marks: the same states, no router lights or steam.
+// Router activity, in place of the cartoon's blinking lights and steam: a load bar over the POP, router load against
+// its capacity in 5% steps, coloured like the links (green, then amber from 65%, red from 90%). From 95%, where the
+// cartoon router steams, the bar pulses.
+function scLoadBar(id,sx,sy,K,now){const cap=(R.nodeCap&&R.nodeCap[id])||0;if(!(cap>0))return;
+  const u=Math.min(1,((R.nodeLoad&&R.nodeLoad[id])||0)/cap),q=Math.round(u*20),dk=scDark();
+  const col=u<0.65?'#3E9E70':u<0.9?'#D99A2E':'#CF4D57',hot=u>=0.95,a0=ctx.globalAlpha;
+  if(hot)ctx.globalAlpha=a0*(.6+.4*Math.sin(now/180));
+  stamp('scload|'+q+'|'+(dk?1:0),22,8,11,4,K,sx-1.5*K,sy-11.5*K,g=>{g.fillStyle=dk?'rgba(220,230,245,.28)':'rgba(43,55,68,.22)';g.fillRect(-8,-1.75,16,3.5);
+    if(q>0){g.fillStyle=col;g.fillRect(-8,-1.75,16*q/20,3.5);}g.strokeStyle=scEdge();g.lineWidth=0.6;g.strokeRect(-8,-1.75,16,3.5);},true);
+  ctx.globalAlpha=a0;}
+// drawCity() with the plain marks: the same states; the router's activity shows as a load bar (scLoadBar).
 function scDrawCity(C,sx,sy,sc,now,lyOverride,dem){
   if(CM.far)return drawCityFar(C,sx,sy,sc,now,lyOverride);
   const hot=(UI.hotMap||{})[C.id];
@@ -66,6 +76,7 @@ function scDrawCity(C,sx,sy,sc,now,lyOverride,dem){
   const ph=cityPhase(C,p,sel,now),spr=citySprite(C,p,t,cs,kq,ph,st),r=k/kq;
   if(ph.gl>=0)dot(sx,sy,16*k,'rgba(255,77,94,1)',.35+.25*(2*ph.gl/7-1));
   blit(spr,sx-spr.ax*r,sy-spr.ay*r,spr.w*r,spr.h*r);
+  if(p&&!down)scLoadBar(C.id,sx,sy,K,now);
   if(ixHot){const on=Math.sin(now/180)>0;stamp('scixhot'+(on?1:0),36,24,18,12,K,sx,sy,()=>{ctx.strokeStyle=scEdge();scIX(C,p,t,true,on?1:-1);},true);}
   if(hot&&p){let y=-6;const pulse=.75+.25*Math.sin(now/200);for(const kk of ['r','t','p','c']){if(!hot[kk])continue;const bx=sx-16*K,by=sy+y*K;dot(bx,by,5.5*K,'#FF4D5E',pulse);
     stamp('schotb|'+HOTL[kk],16,16,8,8,K,bx,by,g=>{g.lineWidth=1.2;g.strokeStyle=scEdge();g.beginPath();g.arc(0,0,5.5,0,7);g.stroke();g.fillStyle='#fff';g.font=`800 7px ${SC_FONT}`;g.textAlign='center';g.textBaseline='middle';g.fillText(HOTL[kk],0,0.5);},true);y+=12;}}

@@ -7016,7 +7016,7 @@
 "title.how_much_trouble":"Wie viel Ärger darf’s sein?",
 "title.huge_eyeball_market_pricey":"Riesiger Privatkundenmarkt. Teure Nachbarn.",
 "title.market_forces_mode":"Marktkräfte-Modus",
-"title.market_forces_mode_desc":"Preise wie in der echten Welt: Wholesale-Transit bringt mehr, einfache Leitungen weniger, und schwer lieferbare Leitungen zahlen einen höheren Aufschlag.",
+"title.market_forces_mode_desc":"Preise wie in der echten Welt: Wholesale-Transit bringt mehr, einfache Leitungen weniger, schwer lieferbare Leitungen zahlen einen höheren Aufschlag, und eingekaufter Transit wird mit den Jahren billiger.",
 "title.name_your_network":"Gib deinem Netz einen Namen",
 "title.new_in_series_of_tubes_v":"Neu in Series of Tubes {v}",
 "title.one_network_one_knot_no_clock":"Ein Netz, ein Knoten zum Entwirren. Keine Uhr.",

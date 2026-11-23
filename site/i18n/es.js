@@ -7014,7 +7014,7 @@
 "title.how_much_trouble":"¿Cuántos problemas quieres?",
 "title.huge_eyeball_market_pricey":"Mercado enorme de eyeballs. Vecinos caros.",
 "title.market_forces_mode":"Modo Fuerzas del mercado",
-"title.market_forces_mode_desc":"Precios del mundo real: el tránsito mayorista se vende más caro, los circuitos simples más baratos, y los circuitos difíciles de entregar pagan una prima mayor.",
+"title.market_forces_mode_desc":"Precios del mundo real: el tránsito mayorista se vende más caro, los circuitos simples más baratos, los circuitos difíciles de entregar pagan una prima mayor, y el tránsito que compras se abarata con los años.",
 "title.name_your_network":"Ponle nombre a tu red",
 "title.new_in_series_of_tubes_v":"Novedades de Series of Tubes {v}",
 "title.one_network_one_knot_no_clock":"Una red, un nudo que deshacer. Sin reloj.",

@@ -54,7 +54,7 @@ test('Market Forces is picked on the title screen and is played alone, without M
   assert.ok(sw, 'the switch is in the options block');
   assert.equal(sw.getAttribute('aria-checked'), 'false');
   assert.match(doc.getElementById('modeName-forces').textContent, /Market Forces mode/);
-  assert.doesNotMatch(doc.getElementById('modeDesc-forces').textContent, /transit you buy/, 'no promise about bought transit before it is built');
+  assert.match(doc.getElementById('modeDesc-forces').textContent, /transit you buy/);
   sw.click();
   assert.equal(doc.querySelector('[data-mode-id=forces]').getAttribute('aria-checked'), 'true');
   assert.equal(doc.querySelector('#fsTog'), null, 'picking it hides the Multimode switch');
@@ -114,6 +114,54 @@ test('Market Forces reaches the offers themselves: spotted, remote-port and capa
   assert.equal(cap.on, Math.round(base * 0.45 * 0.3));
   const cg = both(ev, "(spawnSpot('cgame',{a:'fra',b:null,k:'eye',n:0}),S.offers[S.offers.length-1].rate)");
   assert.deepEqual(cg, { off: 45, on: 59 });
+  assert.deepEqual(errors, []);
+});
+
+// Step 3: bought transit has its own market, flat for 180 days, then 8% cheaper a year down to 40% of its list price.
+const port = "({id:'tx',net:'lvl',city:'fra',tier:1,n:1})";
+test('with the option off, bought transit keeps its list price for ever', () => {
+  const { ev, errors } = load();
+  start(ev);
+  const list = ev("transitPerG(NET.lvl,'fra',false)");
+  for (const d of [0, 181, 900, 9000]) {
+    ev(`S.day=${d}`);
+    assert.equal(ev('mfBuy()'), 1, `day ${d}`);
+    assert.equal(ev("transitPerG(NET.lvl,'fra',false)"), list, `day ${d}`);
+  }
+  assert.deepEqual(errors, []);
+});
+
+test('Market Forces: bought transit is flat for 180 days, then 8% cheaper a year, never under 40%', () => {
+  const { ev, errors } = load();
+  start(ev, ['forces']);
+  ev('S.day=0');
+  const list = ev("transitPerG(NET.lvl,'fra',false)"), mo0 = ev(`transitMo(${port},50)`), fee = ev('PORT[1].tmo');
+  assert.equal(ev('mfBuy(180)'), 1, 'the first six months are flat, so a new network starts on list prices (F2)');
+  assert.ok(Math.abs(ev('mfBuy(180+365)') - 0.92) < 1e-9);
+  assert.ok(Math.abs(ev('mfBuy(180+730)') - 0.92 * 0.92) < 1e-9);
+  assert.equal(ev('mfBuy(180+365*30)'), 0.4);
+  ev('S.day=180+365');
+  assert.ok(Math.abs(ev("transitPerG(NET.lvl,'fra',false)") - list * 0.92) < 1e-9, 'the price per Gbps');
+  assert.ok(Math.abs((ev(`transitMo(${port},50)`) - fee) - (mo0 - fee) * 0.92) < 1e-6, 'the monthly bill; the port fee does not move');
+  assert.match(ev("netMore(NET.lvl,'',false,false)"), new RegExp(`transit \\$${(ev('NET.lvl.price*S.priceMul') * 0.92).toFixed(2)}/Gbps`), 'the Networks tab shows the price you would pay');
+  ev("S.rules.market=false");
+  assert.equal(ev('mfBuy()'), 1, 'without the market rule nothing moves, as for customers');
+  ev('S.rules.market=true;S.mode="sandbox"');
+  assert.equal(ev('mfBuy()'), 1, 'only in a Normal game');
+  assert.deepEqual(errors, []);
+});
+
+test('Market Forces: wholesale transit sold in the hubs never sinks below what it costs to buy there', () => {
+  const { ev, errors } = load();
+  start(ev, ['forces']);
+  for (const d of [0, 400, 1500, 4000, 9000]) {
+    ev(`S.day=${d}`);
+    const sell = ev("bizRate('isp')*mkt()");
+    for (const c of ['fra', 'lon', 'ams', 'nyc', 'ash', 'chi']) {
+      const buy = ev(`Math.max(...NETS.filter(n=>sellsAt(n,'${c}')).map(n=>transitPerG(n,'${c}',false)*S.priceMul))`);
+      assert.ok(sell > buy, `day ${d}, ${c}: sells at ${sell}, buys at up to ${buy}`);
+    }
+  }
   assert.deepEqual(errors, []);
 });
 

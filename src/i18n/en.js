@@ -6821,6 +6821,8 @@
 "settings.pause_when_a_customer_is_furious":"Pause when a customer is furious",
 "settings.quiet_notifications":"Quiet notifications",
 "settings.saved_on_this_device":"Saved on this device.",
+"settings.serious_map":"Serious map",
+"settings.serious_map_note":"An atlas look: muted colours, a thin coastline, no waves, hills or clouds. Reloads the page.",
 "settings.stops_the_game_when_a_failure":"Stops the game when a failure costs you real traffic, not when it reroutes by itself.",
 "settings.the_agent_moves_it":"The agent moves it",
 "settings.the_clock_while_an_agent_plays":"The clock while an agent plays",

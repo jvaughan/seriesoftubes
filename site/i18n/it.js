@@ -6820,6 +6820,8 @@
 "settings.pause_when_a_customer_is_furious":"Pausa quando un cliente è furioso",
 "settings.quiet_notifications":"Notifiche discrete",
 "settings.saved_on_this_device":"Salvate su questo dispositivo.",
+"settings.serious_map":"Mappa seria",
+"settings.serious_map_note":"Aspetto da atlante: colori tenui, costa sottile, niente onde, colline o nuvole. Ricarica la pagina.",
 "settings.stops_the_game_when_a_failure":"Ferma il gioco quando un guasto ti costa traffico vero, non quando si reinstrada da solo.",
 "settings.the_agent_moves_it":"Lo muove l'agente",
 "settings.the_clock_while_an_agent_plays":"L'orologio mentre gioca un agente",

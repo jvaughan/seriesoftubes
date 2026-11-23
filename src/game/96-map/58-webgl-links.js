@@ -105,7 +105,7 @@ function glFrame(ML,ks,far,busy,now,sc){const gl=GLX.gl;
   gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);
   const L=GLX.line,K=GLX.pk,wm=sc*(far?0.5:1),lines=(pass,v=GLX.lv.v,n=GLX.nSeg)=>{gl.useProgram(L.p);gl.bindVertexArray(v);gl.uniform1f(L.u.uBusy,busy?1:0);gl.uniform1i(L.u.uPass,pass);
     for(const k of ks){glSet(gl,L,k,wm);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,n);}};
-  if(GLX.nSeg)for(const pass of [LP.casing,LP.colour,LP.dots])lines(pass);
+  if(GLX.nSeg)for(const pass of [LP.casing,LP.colour,LP.dots])if(pass!==LP.casing||MAPC.lcaseW!==0)lines(pass);
   if(GLX.nPk){gl.useProgram(K.p);gl.bindVertexArray(GLX.pv.v);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,GLX.tex);gl.uniform1i(K.u.uPts,0);
     gl.uniform1f(K.u.uT,now/1000);gl.uniform1f(K.u.uFar,far?1:0);for(const k of ks){glSet(gl,K,k,wm);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,GLX.nPk);}}
   // The selection's halo goes over earlier tubes but under its own line and later ones, as in 2D.

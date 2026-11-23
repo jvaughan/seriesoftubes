@@ -49,7 +49,7 @@ function drawFrame(now){
   for(let gi=0;gi<LG.length;gi++){const grp=LG[gi],{l,many,up,cap,load,df,bld,cut,dark,vx,w0,col,dash,pk}=ML.looks[gi],gm=GM[gi];
     const pz=pzOn(),arPz=pz&&!!S.ar,sel=(UI.sel&&UI.sel.type==='link'&&grp.some(x=>x.id===UI.sel.id))||(pz&&pzLinkHot(grp));let lab=null;
     // Only what sits at the middle of a line is still painted here when the card draws the lines.
-    if(G&&!(bld||cut&&!vx||sel||z>0.9&&!busy))continue;
+    if(G&&!(bld||cut&&!vx||sel||z>(MAPC.lblZ||0.9)&&!busy))continue;
     const w=w0*sc*(far?0.5:1),np=gm.pts.length;
     if(SX.length<np){SX=new Float64Array(np*2);SY=new Float64Array(np*2);}
     for(const k of lk){
@@ -64,7 +64,7 @@ function drawFrame(now){
       const path=()=>{ctx.beginPath();ctx.moveTo(SX[0],SY[0]);for(let i=1;i<np;i++)ctx.lineTo(SX[i],SY[i]);};
       ctx.lineCap='round';ctx.lineJoin='round';
       if(sel){ctx.strokeStyle='rgba(255,79,154,.35)';ctx.lineWidth=w+14;path();ctx.stroke();}
-      ctx.strokeStyle='#1E2640';ctx.lineWidth=w+4;ctx.setLineDash(LDASH[dash]);path();ctx.stroke();
+      ctx.setLineDash(LDASH[dash]);path();if(MAPC.lcaseW!==0){ctx.strokeStyle='#1E2640';ctx.lineWidth=w+4;ctx.stroke();}
       ctx.strokeStyle=col;ctx.lineWidth=w;ctx.stroke();ctx.setLineDash([]);
       // Architect runs: tubes sharing one trench are drawn as strands of one bundle (one snip takes them all).
       if(pz&&many){ctx.strokeStyle='#1E2640';ctx.lineWidth=1.3;for(let j=1;j<grp.length;j++){const d=w*(j/grp.length-0.5);ctx.beginPath();for(let i=0;i<np;i++){const a=Math.max(0,i-1),b=Math.min(np-1,i+1),dx=SX[b]-SX[a],dy=SY[b]-SY[a],n=Math.hypot(dx,dy)||1,x=SX[i]-dy/n*d,y=SY[i]+dx/n*d;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();}path();}
@@ -75,9 +75,9 @@ function drawFrame(now){
         ctx.fillStyle='#fff';ctx.strokeStyle='#1E2640';ctx.lineWidth=far?1:1.5;
         const rr2=far?1.6:Math.max(2.2,w*.42),base=now/1000*spd/Math.max(len,40);ctx.beginPath();for(let i=0;i<n;i++){let t=(base+i/n)%1;if(i%2)t=1-t;const [px,py]=at(t);ctx.moveTo(px+rr2,py);ctx.arc(px,py,rr2,0,7);}ctx.fill();ctx.stroke();}
       [mxx,my]=at(.5);}
-      if(bld){if(far)stamp('bldfar',12,12,6,6,1,mxx,my,g=>{g.fillStyle='#FF8A3D';g.strokeStyle='#1E2640';g.lineWidth=1.5;g.beginPath();g.arc(0,0,4,0,7);g.fill();g.stroke();});else drawCone(mxx,my,now);}
-      else if(cut&&!vx){if(far)stamp('cutfar',14,14,7,7,1,mxx,my,g=>{g.fillStyle='#FF4D5E';g.strokeStyle='#1E2640';g.lineWidth=1.5;g.beginPath();g.arc(0,0,5,0,7);g.fill();g.stroke();g.fillStyle='#fff';g.font='900 8px Nunito, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('!',0,0.5);});else if(!arPz)drawBackhoe(mxx,my,now,l.sub);}
-      else if(sel||(pz?!S.ar:z>0.9&&!busy)){const t=lab||(lab=pz?pzLinkLab(grp,up||[l],load,cap):many?groupLabel(grp,up):capName(l));ctx.font='800 11px "Baloo 2", sans-serif';let tw=LINKW.get(t);if(tw===undefined)LINKW.set(t,tw=ctx.measureText(t).width+10);pill(t,ctx.font,tw,17,8,'#fff','#1E2640','#1E2640',2,mxx,my-0.5,1.5);}
+      if(bld){if(far||MAPC.flat)stamp('bldfar',12,12,6,6,1,mxx,my,g=>{g.fillStyle='#FF8A3D';g.strokeStyle='#1E2640';g.lineWidth=1.5;g.beginPath();g.arc(0,0,4,0,7);g.fill();g.stroke();});else drawCone(mxx,my,now);}
+      else if(cut&&!vx){if(far||MAPC.flat)stamp('cutfar',14,14,7,7,1,mxx,my,g=>{g.fillStyle='#FF4D5E';g.strokeStyle='#1E2640';g.lineWidth=1.5;g.beginPath();g.arc(0,0,5,0,7);g.fill();g.stroke();g.fillStyle='#fff';g.font='900 8px Nunito, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('!',0,0.5);});else if(!arPz)drawBackhoe(mxx,my,now,l.sub);}
+      else if(sel||(pz?!S.ar:z>(MAPC.lblZ||0.9)&&!busy)){const t=lab||(lab=pz?pzLinkLab(grp,up||[l],load,cap):many?groupLabel(grp,up):capName(l));ctx.font='800 11px "Baloo 2", sans-serif';let tw=LINKW.get(t);if(tw===undefined)LINKW.set(t,tw=ctx.measureText(t).width+10);pill(t,ctx.font,tw,17,8,'#fff','#1E2640','#1E2640',2,mxx,my-0.5,1.5);}
       // Every puzzle: say whether the tubes between two cities share one trench or take separate paths.
       if(pz&&!cut&&!bld&&(many||arPaths(l)>1)&&(many||lineIdx(l,PI.get(edgeKey(l)))===0))AR_PILLS.push([mxx,my+(sel||!S.ar?19:0),many?tr('architect.n_in_one_trench',{n:grp.length}):'✓ '+tr('architect.n_paths',{n:arPaths(l)}),many]);
     }
@@ -148,12 +148,12 @@ function drawCone(x,y,now){stamp('cone',26,28,13,13,1,x,y-12+Math.sin(now/300)*1
 // Static land + cable map, rendered once per zoom bucket into an offscreen canvas.
 function paintWorld(c,z,withCables){const LANDP=lodFar()?LANDP_FAR:LANDP_ALL;
   for(const o of [0,W,-W]){c.save();c.translate(o+5/z,7/z);c.fillStyle=MAPC.shadow;for(const p of LANDP)c.fill(p);c.restore();}
-  c.strokeStyle=MAPC.sand;c.lineWidth=10/z;c.lineJoin='round';for(const o of [0,W,-W]){c.save();c.translate(o,0);for(const p of LANDP)c.stroke(p);c.restore();}
+  if(MAPC.sandW!==0){c.strokeStyle=MAPC.sand;c.lineWidth=(MAPC.sandW||10)/z;c.lineJoin='round';for(const o of [0,W,-W]){c.save();c.translate(o,0);for(const p of LANDP)c.stroke(p);c.restore();}}
   c.fillStyle=MAPC.grass;for(const o of [0,W,-W]){c.save();c.translate(o,0);for(const p of LANDP)c.fill(p);c.restore();}
   c.fillStyle=MAPC.hill;c.beginPath();for(const [x,y,r] of HILLS){c.moveTo(x+r*1.4,y);c.ellipse(x,y,r*1.4,r*.8,0,0,Math.PI*2);}c.fill();
   c.fillStyle=MAPC.shine;c.beginPath();for(const [x,y,r] of HILLS){c.moveTo(x-r*.3+r*.6,y-r*.25);c.ellipse(x-r*.3,y-r*.25,r*.6,r*.3,0,0,Math.PI*2);}c.fill();
-  c.strokeStyle='#1E2640';c.lineWidth=2.5/z;for(const o of [0,W,-W]){c.save();c.translate(o,0);for(const p of LANDP)c.stroke(p);c.restore();}
-  if(withCables)for(const off of [0,W,-W]){c.save();c.translate(off,0);for(const cp of CABLE_PAIRS){const C=CAB[cp.cid];c.globalAlpha=0.4;c.strokeStyle=cableCol(C);c.lineWidth=1.6/z;c.lineJoin='round';c.setLineDash(C.age==='old'?[6/z,5/z]:[]);c.beginPath();c.moveTo(cp.pts[0][0],cp.pts[0][1]);for(let i=1;i<cp.pts.length;i++)c.lineTo(cp.pts[i][0],cp.pts[i][1]);c.stroke();}c.restore();}
+  c.strokeStyle=MAPC.edge||'#1E2640';c.lineWidth=(MAPC.edgeW||2.5)/z;for(const o of [0,W,-W]){c.save();c.translate(o,0);for(const p of LANDP)c.stroke(p);c.restore();}
+  if(withCables)for(const off of [0,W,-W]){c.save();c.translate(off,0);for(const cp of CABLE_PAIRS){const C=CAB[cp.cid];c.globalAlpha=MAPC.cabA||0.4;c.strokeStyle=cableCol(C);c.lineWidth=1.6/z;c.lineJoin='round';c.setLineDash(C.age==='old'?[6/z,5/z]:[]);c.beginPath();c.moveTo(cp.pts[0][0],cp.pts[0][1]);for(let i=1;i<cp.pts.length;i++)c.lineTo(cp.pts[i][0],cp.pts[i][1]);c.stroke();}c.restore();}
   c.globalAlpha=1;c.setLineDash([]);
 }
 const WL={key:null,cv:null,zAt:0,lastZ:0,sc:1,ox:0,oy:0,full:true};const MAXPX=4096;

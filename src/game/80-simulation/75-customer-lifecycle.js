@@ -106,7 +106,7 @@ function clReferral(d){if(d%45!==0||S.offers.length>=6)return;
   const b=S.biz.filter(x=>clOn(x)&&CL_REF.includes(x.type)&&x.mood>=90&&d-(x.since||0)>=365&&bizCity(x.city)&&lvl()>=(BIZ_T[x.type].lv||1)).sort((a,c)=>c.mood-a.mood||(a.since||0)-(c.since||0)||(a.id<c.id?-1:1))[0];
   if(!b||S.offers.some(o=>o.ref===b.id))return;const T=BIZ_T[b.type],list=(T.names||BIZ_N).filter(n=>!S.usedNames.includes(n));if(!list.length)return;
   const name=clPick(list,{type:b.type,city:b.city,city2:b.city2,name:b.name,te:d},'refname');useName(name);
-  S.offers.push({id:uid(),city:b.city,city2:null,name,type:b.type,bw:(T.opts||[1])[0],rate:Math.round((CITY[b.city].au?bizRate(b.type)*AU_ARPU:bizRate(b.type))*mkt()),mk:mkt(),reqs:[],exp:d+40,ref:b.id,refN:b.name});}
+  S.offers.push({id:uid(),city:b.city,city2:null,name,type:b.type,bw:(T.opts||[1])[0],rate:Math.round(cityRate(b.type,b.city)*mkt()),mk:mkt(),reqs:[],exp:d+40,ref:b.id,refN:b.name});}
 // New offers are priced at today's market (spawnOffer and friends price at 1; this moves them).
 function mktPrice(from){const m=mkt();for(let i=from;i<S.offers.length;i++){const o=S.offers[i];if(o.mk)continue;o.mk=m;if(m!==1){o.rate=Math.round(o.rate*m);if(o.fee)o.fee=Math.round(o.fee*m);}}}
 

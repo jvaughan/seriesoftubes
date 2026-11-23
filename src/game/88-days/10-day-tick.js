@@ -166,8 +166,8 @@ function spawnOffer(){if(hyper()){hsSpawn();return;} // a Hyperscaler sells clou
   if(t==='provedor')city=pick(br);
   if(t==='isp'&&dense.length&&Math.random()<0.5)city=pick(dense);
   if(t==='hft'){const fin=['nyc','chi','lon','fra','tok','sin','hkg','ams','ash'],mf=mine.filter(c=>fin.includes(c));city=mf.length?pick(mf):pick(mine);city2=pick(fin.filter(c=>c!==city));}
-  let rate=T.l2?Math.round(l2Per(kmBetween(city,city2),T)*(T.lat?latPay():1)):bizRate(t);
-  if(CITY[city].au&&!T.l2&&!T.fiber&&!T.event){rate=Math.round(rate*AU_ARPU);bw=Math.min(bw,pick(T.opts.slice(0,2)));}
+  let rate=Math.round(T.l2?l2Per(kmBetween(city,city2),T)*(T.lat?latPay():1):cityRate(t,city));
+  if(CITY[city].au&&!T.l2&&!T.fiber&&!T.event)bw=Math.min(bw,pick(T.opts.slice(0,2)));
   if(T.div&&!reqCan('diverse',{city,city2}))return;
   const reqs=T.div?['diverse']:T.lat?['lat']:[];if((t==='hyper'||t==='ai'||t==='gpu')&&Math.random()<0.4)reqs.push('metro');const pool=Object.keys(REQS).filter(k=>!reqs.includes(k)&&!REQS[k].only&&(!REQS[k].l2||T.l2)&&(!REQS[k].ip||!T.l2)&&reqCan(k,{city,city2}));
   if(Math.random()<(T.lv>=3?0.65:0.3))reqs.push(pick(pool));

@@ -9,5 +9,5 @@ const mfOn=()=>modeOn('forces');
 const bizRate=t=>{const T=BIZ_T[t],f=mfOn()&&MF.rate[t];return f?Math.round(T.rate*f):T.rate;};
 // A circuit's price per Gbps from its length. Latency-priced circuits keep their price: low latency really is a premium.
 const l2Per=(km,T,f=T.km)=>(150+km*0.08)*f*(mfOn()&&!T.lat?MF.l2:1);
-// A requirement's bonus. On a circuit, being hard to deliver pays double.
-const reqBonus=(k,T)=>REQS[k].bonus*(mfOn()&&T&&T.l2?MF.req:1);
+// A requirement's bonus. On a circuit, being hard to deliver pays double; latency-priced circuits keep Classic bonuses.
+const reqBonus=(k,T)=>REQS[k].bonus*(mfOn()&&T&&T.l2&&!T.lat?MF.req:1);

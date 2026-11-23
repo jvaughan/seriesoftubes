@@ -54,6 +54,7 @@ test('Market Forces is picked on the title screen and is played alone, without M
   assert.ok(sw, 'the switch is in the options block');
   assert.equal(sw.getAttribute('aria-checked'), 'false');
   assert.match(doc.getElementById('modeName-forces').textContent, /Market Forces mode/);
+  assert.doesNotMatch(doc.getElementById('modeDesc-forces').textContent, /transit you buy/, 'no promise about bought transit before it is built');
   sw.click();
   assert.equal(doc.querySelector('[data-mode-id=forces]').getAttribute('aria-checked'), 'true');
   assert.equal(doc.querySelector('#fsTog'), null, 'picking it hides the Multimode switch');
@@ -95,6 +96,7 @@ test('Market Forces: transit types sell dearer, plain circuits cheaper, hard cir
   assert.equal(ev("reqBonus('diverse',BIZ_T.ai)"), 0.5);
   assert.equal(ev("reqBonus('sharks',BIZ_T.l2vpn)"), 0.4);
   assert.equal(ev("reqBonus('local',BIZ_T.isp)"), 0.2, 'IP customers keep the Classic bonus');
+  for (const t of ['hft', 'lowlat', 'flex', 'mars']) assert.equal(ev(`reqBonus('sharks',BIZ_T.${t})`), 0.2, `${t} keeps its Classic bonuses`);
   assert.deepEqual(errors, []);
 });
 
@@ -118,6 +120,8 @@ test('Market Forces reaches the offers themselves: spotted, remote-port and capa
 test('every km-priced circuit goes through l2Per(), so no price site can skip the option', () => {
   const fs = require('node:fs'), path = require('node:path');
   const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(d, e.name)) : e.name.endsWith('.js') ? [path.join(d, e.name)] : []);
-  const hits = walk(path.join(__dirname, '..', 'src', 'game')).filter(f => /\(150\+[^)]*\*0\.08\)/.test(fs.readFileSync(f, 'utf8')));
+  const re = /150\s*\+[^;]*?\*\s*0\.08\b/;
+  for (const old of ['(150+kmBetween(city,city2)*0.08)*T.km', '(150+km*0.08)*T.km', '(150 + avg * 0.08)*0.6', '(150+kmBetween(a,b)*0.08)*BIZ_T.rpeer.km']) assert.match(old, re, old);
+  const hits = walk(path.join(__dirname, '..', 'src', 'game')).filter(f => re.test(fs.readFileSync(f, 'utf8')));
   assert.deepEqual(hits.map(f => path.basename(f)), ['35-market-forces.js']);
 });

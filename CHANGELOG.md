@@ -6,6 +6,7 @@ All notable changes to this project are documented here. The project follows
 
 ## [Unreleased]
 
+- You can now rename an exchange you founded from its panel. It kept the name it got on the day you founded it, even after you renamed your network.
 - Settings can now show the real company behind each network, exchange, cable and router name. It is off by default and only changes what is shown; saves keep the game's names.
 - Networks far away can now buy a remote port into an exchange you founded. Each one is a circuit from one of your POPs to the exchange, carried on your backbone and paid per Gbps, and its network joins as a member and peers with you; an exchange takes up to half its fabric's member limit in remote ports, on top of its local members. Most requests come from fairly near, and a busy exchange draws networks from farther away than a new one.
 - Fiber still being built can now be kept off the capacity market from its panel. The broker used to start selling a new route the day it was handed over, before you could switch it off.

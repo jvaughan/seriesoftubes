@@ -6832,6 +6832,8 @@
 "settings.pause_when_a_customer_is_furious":"Pause quand un client est furieux",
 "settings.quiet_notifications":"Notifications discrètes",
 "settings.saved_on_this_device":"Sauvegardées sur cet appareil.",
+"settings.serious_tubes":"Serious Tubes",
+"settings.serious_tubes_note":"Ces tubes sont sérieux. Remplace l'aspect cartoon et les phrases d'origine par quelque chose de bien trop prétentieux.",
 "settings.stops_the_game_when_a_failure":"Arrête le jeu quand une panne te coûte du vrai trafic, pas quand elle se reroute toute seule.",
 "settings.the_agent_moves_it":"L'agent l'avance",
 "settings.the_clock_while_an_agent_plays":"L'horloge pendant qu'un agent joue",

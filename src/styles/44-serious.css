@@ -1,0 +1,42 @@
+/* Serious Tubes (32-serious-map.js puts .serious on <html>): a calmer interface to go with it. The system's own sans-serif in
+   place of the rounded fonts; outlines and the hard "sticker" shadows (both drawn in --edge) turn into faint hairlines;
+   every border is 1px (rules that say border:0 still draw none); the floating panels get a soft shadow and smaller
+   corners; your network's colour is a deep blue instead of the cartoon pink (35-serious-accent.js does the rest). */
+:root.serious{--display:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --edge:rgba(30,38,64,.18);--me:#2F6DB5}
+:root.serious.dark{--edge:rgba(190,205,230,.16)}
+:root.serious *{border-width:1px!important}
+:root.serious .card,:root.serious .chip{box-shadow:0 1px 2px rgba(15,25,40,.10),0 6px 18px rgba(15,25,40,.10)!important}
+:root.serious.dark .card,:root.serious.dark .chip{box-shadow:0 1px 2px rgba(0,0,0,.35),0 6px 18px rgba(0,0,0,.35)!important}
+:root.serious h2,:root.serious h3,:root.serious h4{font-weight:650;letter-spacing:-.01em}
+/* The bar along the top: smaller type and chips on wide screens (tablets and phones have their own, smaller sizes). */
+@media (min-width:1000px){
+  :root.serious #hud .chip{min-height:40px;padding:2px 10px}
+  :root.serious #hud .chip .val{font-size:16px}
+  :root.serious #hud .brand .val{font-size:16.5px}
+  :root.serious #hud .chip .lbl{font-size:9.5px}
+  :root.serious #hud .chip .sub{font-size:10.5px}
+  :root.serious #hud .speed button{height:28px;min-width:30px;font-size:12px}
+  :root.serious #hud .chip.find{width:40px;min-width:40px;font-size:16px}
+}
+/* A city panel's header shows its name and facts, without the router's cartoon (the router window still has it). */
+:root.serious .ph .phpic{display:none}
+/* Buttons that were just a magnifier emoji (find in the top bar, traceroute in a city panel), which serious mode takes
+   out of the text: a drawn magnifier instead. */
+:root.serious{--sm-mag:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='M15.5 15.5L21 21'/%3E%3C/svg%3E")}
+:root.serious #hud .chip.find::after,:root.serious .trb::before{content:'';display:inline-block;vertical-align:middle;width:17px;height:17px;background:currentColor;-webkit-mask:var(--sm-mag) center/contain no-repeat;mask:var(--sm-mag) center/contain no-repeat}
+:root.serious .trb::before{width:14px;height:14px}
+/* Primary and active (default buttons, the running speed, the chosen toggle) in a pale steel blue, not cartoon yellow. */
+:root.serious{--sun:#D6E3F3}
+:root.serious.dark{--sun:#A9C1DF}
+/* The logo: a white line mark on the brand colour, without the thick cartoon outline. */
+:root.serious .brand .tube path:first-child{stroke:none}
+:root.serious .brand .tube path:nth-child(2){stroke:#fff;stroke-width:3}
+:root.serious .brand .tube circle{fill:#fff;stroke:none;r:3.5px}
+/* Tabs and markers written as var(--pink,#FF4F9A) (the dashboard's and dialogs' tabs, selected rows): with --pink set,
+   they take your colour too. The AI button loses its purple-to-pink gradient. */
+:root.serious{--pink:#2F6DB5}
+:root.serious .aibtn{background:var(--me)}
+/* Status colours, muted: good, bad and warning (and eyeballs) without the cartoon brightness. 35-serious-accent.js
+   remaps the same colours where the code writes them out, the map's link load colours included. */
+:root.serious{--ok:#3E9E70;--eye:#2F8A5E;--bad:#CF4D57;--warn:#D99A2E}

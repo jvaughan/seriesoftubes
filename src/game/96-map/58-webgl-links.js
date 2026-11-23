@@ -59,6 +59,7 @@ function glLines(gl,vao,n,ks){const L=GLX.line;gl.useProgram(L.p);gl.bindVertexA
 /* Packets: one instance per packet; where it is on its tube comes from the tube's points (a float texture of x, y and
    the share of the length so far, GL_PTS_W texels a row), found by bisection the way polyAtXY() finds it. */
 const GL_PTS_W=2048;
+let PK_RATE=1; // how fast packets run, 1 = about 90 px a second (Serious Tubes slows them)
 const GL_PK_VS=GL_HEAD+GL_CLIP+`layout(location=0) in vec4 aK;layout(location=1) in vec4 aQ;
 uniform vec2 uView;uniform vec3 uCam;uniform float uWMul,uDpr,uT,uFar;uniform highp sampler2D uPts;
 out vec2 vLoc;flat out float vR,vLw;
@@ -105,9 +106,9 @@ function glFrame(ML,ks,far,busy,now,sc){const gl=GLX.gl;
   gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);
   const L=GLX.line,K=GLX.pk,wm=sc*(far?0.5:1),lines=(pass,v=GLX.lv.v,n=GLX.nSeg)=>{gl.useProgram(L.p);gl.bindVertexArray(v);gl.uniform1f(L.u.uBusy,busy?1:0);gl.uniform1i(L.u.uPass,pass);
     for(const k of ks){glSet(gl,L,k,wm);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,n);}};
-  if(GLX.nSeg)for(const pass of [LP.casing,LP.colour,LP.dots])lines(pass);
+  if(GLX.nSeg)for(const pass of [LP.casing,LP.colour,LP.dots])if(pass!==LP.casing||MAPC.lcaseW!==0)lines(pass);
   if(GLX.nPk){gl.useProgram(K.p);gl.bindVertexArray(GLX.pv.v);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,GLX.tex);gl.uniform1i(K.u.uPts,0);
-    gl.uniform1f(K.u.uT,now/1000);gl.uniform1f(K.u.uFar,far?1:0);for(const k of ks){glSet(gl,K,k,wm);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,GLX.nPk);}}
+    gl.uniform1f(K.u.uT,now/1000*PK_RATE);gl.uniform1f(K.u.uFar,far?1:0);for(const k of ks){glSet(gl,K,k,wm);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,GLX.nPk);}}
   // The selection's halo goes over earlier tubes but under its own line and later ones, as in 2D.
   if(GLX.nHalo){gl.depthFunc(gl.LESS);gl.depthMask(false);lines(LP.halo,GLX.hv.v,GLX.nHalo);gl.depthMask(true);}
   gl.bindVertexArray(null);}

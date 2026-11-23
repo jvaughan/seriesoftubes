@@ -6834,6 +6834,8 @@
 "settings.pause_when_a_customer_is_furious":"Bei wütenden Kunden pausieren",
 "settings.quiet_notifications":"Leise Benachrichtigungen",
 "settings.saved_on_this_device":"Auf diesem Gerät gespeichert.",
+"settings.serious_tubes":"Serious Tubes",
+"settings.serious_tubes_note":"Diese Röhren meinen es ernst. Tauscht den ursprünglichen Cartoon-Look und die Sprüche gegen etwas viel zu Hochtrabendes.",
 "settings.stops_the_game_when_a_failure":"Hält das Spiel an, wenn ein Ausfall dich echten Traffic kostet, nicht wenn der Traffic von selbst umgeleitet wird.",
 "settings.the_agent_moves_it":"Der Agent stellt sie",
 "settings.the_clock_while_an_agent_plays":"Die Uhr, während ein Agent spielt",

@@ -9,7 +9,7 @@ const langPick=id=>`<select class="pick" id="${id}" data-chg="langSet" aria-labe
 function segBtns(act,cur,opts){return opts.map(([v,l])=>segB(l,act,{v},cur===v)).join('');}
 /* Animation setting: auto follows the system's reduced-motion preference, or force it on or off. */
 /* Settings are per device (localStorage), not part of the save: they are about how you like to play. */
-const PREF_DEF={pauseFurious:true,warnUnhappy:true,pauseIncident:false,quiet:false};
+const PREF_DEF={pauseFurious:true,warnUnhappy:true,pauseIncident:false,quiet:false,serious:false};
 let PREFS=(()=>{try{const j=JSON.parse(localStorage.getItem('sot-prefs')||'{}');return j&&typeof j==='object'?j:{};}catch(e){return {};}})();
 const pref=k=>typeof PREFS[k]==='boolean'?PREFS[k]:PREF_DEF[k];
 // Quiet notifications: the player's choice once made, until then on in Best Effort only.
@@ -32,6 +32,7 @@ function settingsHtml(){const seg=(lab,act,cur,opts,note)=>`<div class="setline"
   ${seg(tr('settings.theme'),'themeSet',UI.theme||'light',[['light',tr('settings.theme_light')],['dark',tr('settings.theme_dark')],['auto',tr('common.auto')]],tr('settings.theme_auto_follows'))}
   ${seg(tr('common.animations'),'animSet',UI.anim||'auto',[['auto',tr('common.auto')],['on',tr('common.on')],['off',tr('common.off')]],tr('settings.anim_auto_follows'))}
   ${seg(tr('settings.map_drawing'),'mapSet',GLX.want?'auto':'2d',[['auto',tr('common.auto')],['2d',tr('settings.always_2d')]],tr('settings.map_auto_uses_gpu')+(GLX.want&&!glCan()?' '+tr('settings.this_browser_cannot_so_the_map'):''))}
+  ${seg(tr('settings.serious_tubes'),'prefSet',cur('serious'),onoff('serious'),tr('settings.serious_tubes_note'))}
   ${sec(tr('settings.customers_and_alerts'))}
   ${seg(tr('settings.pause_when_a_customer_is_furious'),'prefSet',cur('pauseFurious'),onoff('pauseFurious'),tr('settings.the_game_stops_so_you_can'))}
   ${seg(tr('settings.warn_when_a_customer_gets_unhappy'),'prefSet',cur('warnUnhappy'),onoff('warnUnhappy'),tr('settings.an_early_heads_up_below_60'))}

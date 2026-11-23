@@ -50,12 +50,12 @@ function coastLevel(z){const want=Math.floor(Math.log2(Math.max(z,1/64))),cur=GL
 function coastFan(P,out){let a=0;const n=P.length;for(let i=0;i<n;i++){const p=P[i],q=P[(i+1)%n];a+=p[0]*q[1]-q[0]*p[1];}
   const s=a<0?1:0;for(let i=1;i+1<n;i++){const b=P[i+s],c=P[i+1-s];out.push(P[0][0],P[0][1],b[0],b[1],c[0],c[1]);}return out;}
 function glLandGeo(gl,far,lv){const key=(far?'far':'all')+(lv===undefined?'':'@'+lv)+MAPC.k;let G=GLX.land[key];if(G)return G;
-  const keep=far?new Set(LANDP_FAR):null,tol=lv===undefined?0:COAST_TOL/Math.pow(2,lv),fan=[],sand=[],edge=[],SAND=glPal().sand,EDGE=glColor('#1E2640');
+  const keep=far?new Set(LANDP_FAR):null,tol=lv===undefined?0:COAST_TOL/Math.pow(2,lv),fan=[],sand=[],edge=[],SAND=glPal().sand,EDGE=glColor(MAPC.edge||'#1E2640'),EW=MAPC.edgeW||2.5;
   COAST.forEach((ring,ri)=>{if(keep&&!keep.has(LANDP_ALL[ri]))return;if(ring.length<3)return;
     const P=coastSimplify(coastPts(ri),tol);if(P.length<4)return;
     coastFan(P,fan);
     // A closed ring (its first point repeated at the end), joined all round.
-    const s0=sand.length/LINE_STRIDE;for(let i=0;i+1<P.length;i++){glSeg(sand,P[i],P[i+1],0,10,0,LINE_ROUND,SAND);glSeg(edge,P[i],P[i+1],0,2.5,0,LINE_ROUND,EDGE);}
+    const s0=sand.length/LINE_STRIDE;for(let i=0;i+1<P.length;i++){glSeg(sand,P[i],P[i+1],0,10,0,LINE_ROUND,SAND);glSeg(edge,P[i],P[i+1],0,EW,0,LINE_ROUND,EDGE);}
     const s1=sand.length/LINE_STRIDE;glJoin(sand,s0,s1,true);glJoin(edge,s0,s1,true);});
   const hills=[],shine=[];for(const [x,y,r] of HILLS){hills.push(x,y,r*1.4,r*.8);shine.push(x-r*.3,y-r*.25,r*.6,r*.3);}
   const F=a=>new Float32Array(a);
@@ -78,7 +78,7 @@ function glEllipses(gl,vao,n,ks,col){const P=GLX.ell;gl.useProgram(P.p);gl.bindV
 // In paintWorld()'s order: the shadow (5, 7 px down and right), the sand, the grass, the hills, the coastline.
 function glLand(gl,ks){const G=glLandGeo(gl,lodFar(),coastLevel(cam.z)),C=glPal();
   glLandFill(gl,G,ks,5,7,C.shadow);
-  glLines(gl,G.sand,G.nSeg,ks);
+  if(MAPC.sandW!==0)glLines(gl,G.sand,G.nSeg,ks);
   glLandFill(gl,G,ks,0,0,C.grass);
   glEllipses(gl,G.hills,G.nHill,ks,C.hill);glEllipses(gl,G.shine,G.nHill,ks,C.shine);
   glLines(gl,G.edge,G.nSeg,ks);}
@@ -105,7 +105,7 @@ function glClouds(gl,now,ks){const need=ks.length*CLOUDS.length*12;if(!need)retu
 function glCables(gl,ks,selC,ar){const key=[selC,ar];
   if(!GLX.ckey||key.some((v,i)=>v!==GLX.ckey[i])){const A=[];
     for(const cp of CABLE_PAIRS){const hot=!!selC&&(cp.a===selC||cp.b===selC);if(ar&&!hot&&!(arKind(cp.a)&&arKind(cp.b)))continue;
-      const C=CAB[cp.cid],[r,g,b]=glColor(cableCol(C)),col=[r,g,b,hot?.95:.4],s0=A.length/LINE_STRIDE;let cum=0;
+      const C=CAB[cp.cid],[r,g,b]=glColor(cableCol(C)),col=[r,g,b,hot?.95:(MAPC.cabA||.4)],s0=A.length/LINE_STRIDE;let cum=0;
       for(let j=0;j+1<cp.pts.length;j++){const p=cp.pts[j],q=cp.pts[j+1];glSeg(A,p,q,cum,hot?3:1.6,C.age==='old'?6:0,0,col);cum+=Math.hypot(q[0]-p[0],q[1]-p[1]);}
       glJoin(A,s0,A.length/LINE_STRIDE,false);}
     const F=new Float32Array(A);gl.bindBuffer(gl.ARRAY_BUFFER,GLX.cb.b);gl.bufferData(gl.ARRAY_BUFFER,F,gl.STATIC_DRAW);glMem(gl,'the cables');GLX.cn=F.length/LINE_STRIDE;GLX.ckey=key;}

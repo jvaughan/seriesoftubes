@@ -6,8 +6,13 @@
 // buy: the transit you buy, flat for its first days, then cheaper by yr a year down to floor of its list price.
 const MF={rate:{isp:3,provedor:2.5,metav:1.5,cgame:1.3},l2:0.3,req:2,buy:{free:180,yr:0.08,floor:0.4}};
 const mfOn=()=>modeOn('forces');
-// What a transit-type customer pays per Gbps before the market moves it.
-const bizRate=t=>{const T=BIZ_T[t],f=mfOn()&&MF.rate[t];return f?Math.round(T.rate*f):T.rate;};
+// Wholesale transit buyers (the MF.rate types) pay what transit costs where they are: in the mode their price follows
+// the city's transit price (regionMult(): 2.5× in Asia, 3× in Australia), as what you buy there does.
+const mfReg=t=>mfOn()&&!!MF.rate[t];
+// What a transit-type customer pays per Gbps before the market moves it; with a city, the mode's regional price too.
+const bizRate=(t,c)=>{const T=BIZ_T[t],f=mfOn()&&MF.rate[t],r=f?Math.round(T.rate*f):T.rate;return c&&mfReg(t)?Math.round(r*regionMult(c)):r;};
+// The same with Australia's dearer retail prices (AU_ARPU), which the regional price replaces for wholesale buyers.
+const cityRate=(t,c)=>CITY[c].au&&!mfReg(t)?bizRate(t)*AU_ARPU:bizRate(t,c);
 // A circuit's price per Gbps from its length. Latency-priced circuits keep their price: low latency really is a premium.
 const l2Per=(km,T,f=T.km)=>(150+km*0.08)*f*(mfOn()&&!T.lat?MF.l2:1);
 // A requirement's bonus. On a circuit, being hard to deliver pays double; latency-priced circuits keep Classic bonuses.

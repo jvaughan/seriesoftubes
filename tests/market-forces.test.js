@@ -151,17 +151,36 @@ test('Market Forces: bought transit is flat for 180 days, then 8% cheaper a year
   assert.deepEqual(errors, []);
 });
 
-test('Market Forces: wholesale transit sold in the hubs never sinks below what it costs to buy there', () => {
+test('Market Forces: wholesale transit, wherever it is sold, never sinks below what it costs to buy there', () => {
   const { ev, errors } = load();
   start(ev, ['forces']);
   for (const d of [0, 400, 1500, 4000, 9000]) {
-    ev(`S.day=${d}`);
-    const sell = ev("bizRate('isp')*mkt()");
-    for (const c of ['fra', 'lon', 'ams', 'nyc', 'ash', 'chi']) {
-      const buy = ev(`Math.max(...NETS.filter(n=>sellsAt(n,'${c}')).map(n=>transitPerG(n,'${c}',false)*S.priceMul))`);
-      assert.ok(sell > buy, `day ${d}, ${c}: sells at ${sell}, buys at up to ${buy}`);
-    }
+    const bad = JSON.parse(ev(`(()=>{S.day=${d};const bad=[];for(const c of Object.keys(CITY)){const ns=NETS.filter(n=>sellsAt(n,c));if(!ns.length)continue;
+      const buy=Math.max(...ns.map(n=>transitPerG(n,c,false)*S.priceMul));
+      for(const t of Object.keys(MF.rate)){const sell=cityRate(t,c)*mkt();if(!(sell>buy))bad.push(t+'@'+c+': sells '+sell.toFixed(1)+', buys '+buy.toFixed(1));}}return JSON.stringify(bad);})()`));
+    assert.deepEqual(bad, [], `day ${d}`);
   }
+  assert.deepEqual(errors, []);
+});
+
+test('Market Forces: wholesale buyers pay their city\'s transit price, everyone else keeps Classic regional prices', () => {
+  const { ev, errors } = load();
+  start(ev);
+  // Classic: Australia's retail uplift on every IP customer, nothing regional anywhere else, spotted offers unchanged.
+  assert.equal(ev("cityRate('isp','syd')"), 15 * 1.8);
+  assert.equal(ev("cityRate('dia','syd')"), 600 * 1.8);
+  assert.equal(ev("cityRate('isp','sin')"), 15);
+  assert.equal(ev("bizRate('cgame','sin')"), 45);
+  ev("S.rules.mods=['forces']");
+  assert.equal(ev("regionMult('fra')"), 1);
+  assert.equal(ev("cityRate('isp','fra')"), 45);
+  assert.equal(ev("cityRate('isp','sin')"), Math.round(45 * ev("regionMult('sin')")));
+  assert.equal(ev("cityRate('provedor','sao')"), Math.round(50 * ev("regionMult('sao')")));
+  assert.equal(ev("cityRate('isp','syd')"), Math.round(45 * ev("regionMult('syd')")), 'the regional price replaces the retail uplift, never both');
+  assert.equal(ev("cityRate('dia','syd')"), 600 * 1.8, 'retail keeps the Australian uplift');
+  assert.equal(ev("cityRate('dia','sin')"), 600, 'retail sells far above its transit anyway');
+  const cg = ev("(spawnSpot('cgame',{a:'sin',b:null,k:'eye',n:0}),S.offers[S.offers.length-1].rate)");
+  assert.equal(cg, Math.round(59 * ev("regionMult('sin')")), 'spotted offers too');
   assert.deepEqual(errors, []);
 });
 

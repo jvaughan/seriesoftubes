@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-PjeQmLMkaG7DD4KZYsWnbiExbihLFM2C1njA/j33DjU=' 'sha256-05t1Aj0mizipeXj0c6p7VNsz+h7YyzO2exIB1D/QdPQ=' https://cdn.jsdelivr.net/npm/ridiculytics@1.0.1/web/counter.min.js; worker-src 'self' blob:; connect-src 'self' wss: ws://*.localhost:* https://stats.seriesoftub.es; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://stats.seriesoftub.es; object-src 'none'; frame-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-PjeQmLMkaG7DD4KZYsWnbiExbihLFM2C1njA/j33DjU=' 'sha256-kyxIW/nTQv4qye4fEIrM4jdo0Yer5HnhfUk6riq4OPw=' https://cdn.jsdelivr.net/npm/ridiculytics@1.0.1/web/counter.min.js; worker-src 'self' blob:; connect-src 'self' wss: ws://*.localhost:* https://stats.seriesoftub.es; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://stats.seriesoftub.es; object-src 'none'; frame-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Series of Tubes — Build the Internet, One Tube at a Time</title>
 <meta name="description" content="A free cartoon browser game about building the internet. Lay fiber and subsea cables, buy transit, peer at internet exchanges, host CDN caches and survive backhoes, sharks and BGP leaks on your way to Tier 1.">
@@ -33021,6 +33021,7 @@ const RN_MAP=Object.freeze({
   'Tell-Ya Carrier': 'Arelion (Telia Carrier)',
   'Cogentle': 'Cogent Communications',
   'Ta-Ta Comms': 'Tata Communications',
+  'Gin & Transit': 'GTT',
   'Drizzle Electric': 'Hurricane Electric',
   'Tangerine Telecom': 'Orange',
   'SingTell': 'Singtel',
@@ -34815,6 +34816,7 @@ function glLines(gl,vao,n,ks){const L=GLX.line;gl.useProgram(L.p);gl.bindVertexA
 /* Packets: one instance per packet; where it is on its tube comes from the tube's points (a float texture of x, y and
    the share of the length so far, GL_PTS_W texels a row), found by bisection the way polyAtXY() finds it. */
 const GL_PTS_W=2048;
+let PK_RATE=1; // how fast packets run, 1 = about 90 px a second (Serious Tubes slows them)
 const GL_PK_VS=GL_HEAD+GL_CLIP+`layout(location=0) in vec4 aK;layout(location=1) in vec4 aQ;
 uniform vec2 uView;uniform vec3 uCam;uniform float uWMul,uDpr,uT,uFar;uniform highp sampler2D uPts;
 out vec2 vLoc;flat out float vR,vLw;
@@ -34863,7 +34865,7 @@ function glFrame(ML,ks,far,busy,now,sc){const gl=GLX.gl;
     for(const k of ks){glSet(gl,L,k,wm);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,n);}};
   if(GLX.nSeg)for(const pass of [LP.casing,LP.colour,LP.dots])if(pass!==LP.casing||MAPC.lcaseW!==0)lines(pass);
   if(GLX.nPk){gl.useProgram(K.p);gl.bindVertexArray(GLX.pv.v);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,GLX.tex);gl.uniform1i(K.u.uPts,0);
-    gl.uniform1f(K.u.uT,now/1000);gl.uniform1f(K.u.uFar,far?1:0);for(const k of ks){glSet(gl,K,k,wm);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,GLX.nPk);}}
+    gl.uniform1f(K.u.uT,now/1000*PK_RATE);gl.uniform1f(K.u.uFar,far?1:0);for(const k of ks){glSet(gl,K,k,wm);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,GLX.nPk);}}
   // The selection's halo goes over earlier tubes but under its own line and later ones, as in 2D.
   if(GLX.nHalo){gl.depthFunc(gl.LESS);gl.depthMask(false);lines(LP.halo,GLX.hv.v,GLX.nHalo);gl.depthMask(true);}
   gl.bindVertexArray(null);}
@@ -35496,13 +35498,13 @@ const scPill0=pill;
 function scPill(t,font,w,h,r,fill,ink,stroke,lw,x,y,ty){if(fill==='#1E2640')return scPill0(t,font,w,h,r,fill,ink,stroke,lw,x,y,ty);scTag(t,h>=19,fill==='#FF4F9A',x,y);}
 if(pref('serious')){pill=scPill;cityStatic=scCityStatic;cityFarStatic=scCityFarStatic;drawCity=scDrawCity;}
 /* Serious Tubes, links (the land is 32-serious-map.js, cities 81-serious-cities.js). Thin lines whose width still grows
-   with capacity, the same colours for load and state, no packets running along them. The palette (MAPC) turns off the
+   with capacity, the same colours for load and state, and the packets running along them, a little slower. The palette (MAPC) turns off the
    dark casing, draws cut and unfinished links with the plain markers, and keeps capacity labels for closer zooms. */
 const slLook0=linkLook;
 function slLinkLook(grp,day){const L=slLook0(grp,day),many=grp.length>1;
-  L.w0=L.vx?1.2:(1.6+Math.max(...grp.map(tierW))*1.0+(many?Math.min(0.9,(grp.length-1)*0.3):0));L.pk=0;return L;}
+  L.w0=L.vx?1.2:(1.6+Math.max(...grp.map(tierW))*1.0+(many?Math.min(0.9,(grp.length-1)*0.3):0));return L;}
 // The link being dragged out is drawn in your colour too (DRAG_PINK is read when it draws).
-if(pref('serious')){linkLook=slLinkLook;const c=glColor('#2F6DB5');for(let i=0;i<4;i++)DRAG_PINK[i]=c[i];}
+if(pref('serious')){linkLook=slLinkLook;PK_RATE=0.6;const c=glColor('#2F6DB5');for(let i=0;i<4;i++)DRAG_PINK[i]=c[i];}
 /* Puzzle map: the puzzle's cities stand out (goals with a pulsing ring and a badge for what they send or ask for,
    stepping stones with a dashed one, cities to avoid crossed out); every other city is on the map as usual, open to
    build in but not emphasised. */

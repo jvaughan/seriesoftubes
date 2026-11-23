@@ -1,4 +1,4 @@
-/* Serious map, type, sizes and corners (with 44-serious.css): the cartoon look leans on very heavy weights (800 and 900 in 130-odd rules)
+/* Serious Tubes, type, sizes and corners (with 44-serious.css): the cartoon look leans on very heavy weights (800 and 900 in 130-odd rules)
    and on Baloo 2 and Nunito, named directly in the stylesheets and in the map's canvas text. When the setting is on,
    once at load: the page's own style rules get lighter weights and the system sans-serif, and every font set on a
    canvas is rewritten the same way (cable names, floaters, badges). Nothing changes with it off. */

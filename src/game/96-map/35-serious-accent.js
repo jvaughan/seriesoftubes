@@ -1,4 +1,4 @@
-/* Serious map, accent and status colours: the game marks everything that is yours in pink (#FF4F9A and its darker and paler shades), in
+/* Serious Tubes, accent and status colours: the game marks everything that is yours in pink (#FF4F9A and its darker and paler shades), in
    stylesheets, inline styles, canvas drawing and the WebGL tubes' selection halo. With the setting on, all of it turns
    deep blue at load (and the bright status greens, amber and reds turn muted), so no game file has to change: CSS rules are rewritten once, canvas colours and shader sources are
    translated as they are set, and inline styles go through the display filter (29-display-filter.js). */

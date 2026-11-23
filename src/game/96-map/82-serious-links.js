@@ -1,4 +1,4 @@
-/* Serious map, links (the land is 32-serious-map.js, cities 81-serious-cities.js). Thin lines whose width still grows
+/* Serious Tubes, links (the land is 32-serious-map.js, cities 81-serious-cities.js). Thin lines whose width still grows
    with capacity, the same colours for load and state, no packets running along them. The palette (MAPC) turns off the
    dark casing, draws cut and unfinished links with the plain markers, and keeps capacity labels for closer zooms. */
 const slLook0=linkLook;

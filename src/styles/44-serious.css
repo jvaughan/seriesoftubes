@@ -1,4 +1,4 @@
-/* Serious map (32-serious-map.js puts .serious on <html>): a calmer interface to go with it. The system's own sans-serif in
+/* Serious Tubes (32-serious-map.js puts .serious on <html>): a calmer interface to go with it. The system's own sans-serif in
    place of the rounded fonts; outlines and the hard "sticker" shadows (both drawn in --edge) turn into faint hairlines;
    every border is 1px (rules that say border:0 still draw none); the floating panels get a soft shadow and smaller
    corners; your network's colour is a deep blue instead of the cartoon pink (35-serious-accent.js does the rest). */

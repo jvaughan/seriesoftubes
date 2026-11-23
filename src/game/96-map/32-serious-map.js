@@ -1,4 +1,4 @@
-/* Serious map (Settings, off by default, local fork): an atlas look in place of the cartoon. Muted sea and land, a
+/* Serious Tubes (Settings, off by default, local fork), the map: an atlas look in place of the cartoon. Muted sea and land, a
    hairline coast, no waves, hills, clouds, sand band or drop shadow, on both maps (2D and the card). The land is cached
    at load, so this is applied once at load and switching reloads the page. */
 const SM_NONE='rgba(0,0,0,0)';

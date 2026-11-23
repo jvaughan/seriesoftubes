@@ -1,4 +1,4 @@
-/* Serious map, icons: no emoji, plain ships. Emoji are taken out of the page's text and the map's canvas text as they
+/* Serious Tubes, icons: no emoji, plain ships. Emoji are taken out of the page's text and the map's canvas text as they
    are shown, through the display filter (29-display-filter.js); a few become plain symbols so their
    meaning stays (✅ ✓, ⚠️ ⚠, ⭐ ★, ❓ ?), and ™, arrows and ▶ stay as they are. Saves and the game's text are untouched.
    The cartoon cable ships become small flat hulls in the same colours. Only with the setting on. */

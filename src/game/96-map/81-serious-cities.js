@@ -1,4 +1,4 @@
-/* Serious map, cities and labels (the land is 32-serious-map.js). When the setting is on, a few of the map's drawing
+/* Serious Tubes, cities and labels (the land is 32-serious-map.js). When the setting is on, a few of the map's drawing
    functions are swapped for plain ones: a dot per city sized by its tier, a flat square for your POP with its router's
    port speed beside it (a second one behind it for more routers, with the count over it, a small linked one for the
    second building, a G tag for a backup generator), text labels with a halo instead of

@@ -792,6 +792,18 @@ const RN_MAP=Object.freeze({
   'Dholl-Puri-IX': 'MIXP',
 
   'Glowball Sakura Lager': 'Global Secure Layer',
+
+  // Banks (the made-up ones, like Horoscope Holdings, stay) and rival satellite ISPs
+  'Goldman Sacks': 'Goldman Sachs',
+  'Deutsche Bankrupt': 'Deutsche Bank',
+  'JP Morgain': 'JPMorgan',
+  'Credit Sweaty': 'Credit Suisse',
+  'Wells Far-Gone': 'Wells Fargo',
+  'Spätzle-Sparkasse': 'Sparkasse',
+  'Revoloot': 'Revolut',
+  'Ballooney Brothers': 'Lehman Brothers',
+  'HugsNet': 'HughesNet',
+  'ViaSad': 'Viasat',
   'Westerly Carrier Hotel': 'Westin Building Exchange',
   'Equinoxious': 'Equinix',
   'Digital Reality Check': 'Digital Realty',

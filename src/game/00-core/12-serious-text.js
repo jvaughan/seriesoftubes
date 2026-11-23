@@ -1,4 +1,4 @@
-/* Serious text (local fork): with Settings → Serious map on and the game in English, these labels say the same thing
+/* Serious text (local fork): with Settings → Serious Tubes on and the game in English, these labels say the same thing
    without the jokes. Facts and gameplay hints stay; a joke that hides real networking becomes the plain fact. Applied
    here, before any game code translates anything (city notes and level names are read at load), so the setting is read
    straight from the saved preferences: pref() does not exist yet. One entry per line, sorted by label. */

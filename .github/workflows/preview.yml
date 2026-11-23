@@ -1,0 +1,93 @@
+name: Branch previews
+
+# Fork-only: every push builds that branch into its own folder on the gh-pages branch, so each branch has a URL:
+#   https://<owner>.github.io/<repo>/<branch>/
+# The real site (release.yml) is untouched. The page uses root-absolute paths ("/sw.js"), so the build is run on a
+# copy of src/ with them moved under the branch's folder; nothing of that is committed to the branch itself.
+# This file must be in a branch for pushes to it to deploy; keep it out of PRs to upstream (it is one commit).
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: write   # push gh-pages
+
+concurrency:
+  group: preview-deploy
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    # Upstream has its own deploy; this is for forks only.
+    if: ${{ github.repository_owner != 'fjaeckel' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      - name: Work out the branch's folder
+        run: |
+          slug=$(printf '%s' "$GITHUB_REF_NAME" | tr -c 'A-Za-z0-9._\n-' '-')
+          echo "SLUG=$slug" >> "$GITHUB_ENV"
+          echo "BASE=/${GITHUB_REPOSITORY#*/}/$slug" >> "$GITHUB_ENV"
+
+      - name: Move the root-absolute paths under the folder (on this checkout only)
+        run: |
+          set -euo pipefail
+          rw() { # file, sed expression: fail if it changed nothing, so upstream drift is noticed
+            sed -i.bak -E "$2" "$1"
+            if cmp -s "$1" "$1.bak"; then echo "::error::preview rewrite changed nothing in $1"; exit 1; fi
+            rm "$1.bak"
+          }
+          rw src/index.html '/(href|src)="\/([^\/])/s#(href|src)="/([^/])#\1="'"$BASE"'/\2#g'
+          rw src/game/95-modals/50-release-notes.js "s#fetch\('/version\.json#fetch('$BASE/version.json#"
+          rw src/game/93-ui/30-install.js "s#register\('/sw\.js#register('$BASE/sw.js#"
+          rw src/game/95-modals/61-help-more.js "s#href=\"/privacy\.html#href=\"$BASE/privacy.html#"
+          rw site/site.webmanifest "s#\"/#\"$BASE/#g"
+
+      - name: Build
+        run: npm run build
+
+      - name: Previews have no offline cache, and are not indexed
+        run: |
+          # The real service worker caches "/", which here is somebody else's page. This one removes itself.
+          printf '%s\n' "self.addEventListener('install',()=>self.skipWaiting());" \
+            "self.addEventListener('activate',e=>e.waitUntil(self.registration.unregister()));" > _site/sw.js
+          rm -f _site/CNAME
+
+      - name: Publish to gh-pages
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          url="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for try in 1 2 3 4 5; do
+            rm -rf pages
+            if git ls-remote --exit-code --heads "$url" gh-pages >/dev/null; then
+              git clone --quiet --depth 1 --branch gh-pages "$url" pages
+            else
+              git init --quiet -b gh-pages pages && git -C pages remote add origin "$url"
+            fi
+            rm -rf "pages/$SLUG"; mkdir -p "pages/$SLUG"; cp -a _site/. "pages/$SLUG/"
+            touch pages/.nojekyll
+            printf 'User-agent: *\nDisallow: /\n' > pages/robots.txt
+            {
+              echo '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1">'
+              echo '<title>Branch previews</title><body style="font:16px system-ui;margin:2rem auto;max-width:36rem;padding:0 1rem"><h1>Branch previews</h1><ul>'
+              for d in $(cd pages && ls -d */ | tr -d / | sort); do echo "<li><a href=\"$d/\">$d</a></li>"; done
+              echo '</ul>'
+            } > pages/index.html
+            git -C pages add -A
+            git -C pages diff --cached --quiet && { echo "Nothing changed."; exit 0; }
+            git -C pages commit --quiet -m "Preview $SLUG at ${GITHUB_SHA::8}"
+            if git -C pages push --quiet origin gh-pages; then break; fi
+            echo "Push raced another branch; retrying ($try)"; sleep $((try * 3))
+          done
+          echo "Preview: https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/$SLUG/" | tee -a "$GITHUB_STEP_SUMMARY"

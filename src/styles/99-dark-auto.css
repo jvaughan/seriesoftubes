@@ -375,6 +375,7 @@
 :where(:root.dark) .bf span{color:var(--ink2)}
 :where(:root.dark) .setsb h3.sub4,:where(:root.dark) .sub4.sets{color:var(--ink2)}
 :where(:root.dark) .setl small{color:var(--ink2)}
+:where(:root.dark).serious .aibtn{background:var(--me)}
 :where(:root.dark) body.noc-window{background:#0B1224}
 :where(:root.dark) #nocBoard{color:#E8EEFA}
 :where(:root.dark) #nocBar{background:#0F1830;border-bottom:1px solid #2A3658}

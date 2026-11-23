@@ -7014,6 +7014,8 @@
 "title.hard_mode_pricey_everything":"Hard mode. Pricey everything, and the wildlife wants you dead.",
 "title.how_much_trouble":"How much trouble?",
 "title.huge_eyeball_market_pricey":"Huge eyeball market. Pricey neighbours.",
+"title.market_forces_mode":"Market Forces mode",
+"title.market_forces_mode_desc":"Real-world prices: wholesale transit sells dearer, plain circuits cheaper, and the transit you buy gets cheaper too.",
 "title.name_your_network":"Name your network",
 "title.new_in_series_of_tubes_v":"New in Series of Tubes {v}",
 "title.one_network_one_knot_no_clock":"One network, one knot to untie. No clock.",

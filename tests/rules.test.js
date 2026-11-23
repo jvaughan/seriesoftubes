@@ -68,7 +68,7 @@ test('the title screen: four doors, four Normal presets, a chaos picker for Sand
   assert.ok(doc.querySelector('.preset[data-preset=freeze].on'));
   challengeOptions.querySelector('summary').click();
   assert.equal(challengeOptions.open, true);
-  assert.equal(challengeOptions.querySelectorAll('[role=switch]').length, 2);
+  assert.equal(challengeOptions.querySelectorAll('[role=switch]').length, 3);
   doc.querySelector('[data-mode-id=autarky]').click();
   assert.equal(doc.querySelector('[data-mode-id=autarky]').getAttribute('aria-checked'), 'true');
   doc.querySelector('[data-mode-id=outcast]').click();

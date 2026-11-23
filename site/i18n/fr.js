@@ -7013,6 +7013,8 @@
 "title.hard_mode_pricey_everything":"Mode difficile. Tout coûte cher, et la faune veut ta peau.",
 "title.how_much_trouble":"Combien d’ennuis ?",
 "title.huge_eyeball_market_pricey":"Énorme marché d’eyeballs. Voisins chers.",
+"title.market_forces_mode":"Mode Lois du marché",
+"title.market_forces_mode_desc":"Des prix réalistes : le transit de gros se vend plus cher, les circuits simples moins cher, et le transit que vous achetez baisse aussi.",
 "title.name_your_network":"Nomme ton réseau",
 "title.new_in_series_of_tubes_v":"Nouveautés de Series of Tubes {v}",
 "title.one_network_one_knot_no_clock":"Un réseau, un nœud à défaire. Pas d’horloge.",

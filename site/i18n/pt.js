@@ -7013,6 +7013,8 @@
 "title.hard_mode_pricey_everything":"Modo difícil. Tudo caro, e a fauna quer te ver morto.",
 "title.how_much_trouble":"Quanta encrenca?",
 "title.huge_eyeball_market_pricey":"Mercado enorme de eyeballs. Vizinhos caros.",
+"title.market_forces_mode":"Modo Forças de mercado",
+"title.market_forces_mode_desc":"Preços realistas: o trânsito no atacado vende mais caro, os circuitos simples mais barato, e o trânsito que você compra também barateia.",
 "title.name_your_network":"Dê um nome à sua rede",
 "title.new_in_series_of_tubes_v":"Novidades no Series of Tubes {v}",
 "title.one_network_one_knot_no_clock":"Uma rede, um nó para desatar. Sem relógio.",

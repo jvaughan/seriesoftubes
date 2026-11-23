@@ -42,6 +42,9 @@ function scCityStatic(C,p,t,cs,k,ph,st){const down=st.down,edge=scEdge();
     ctx.fillStyle=col;ctx.fillRect(-6,-6,12,12);ctx.strokeRect(-6,-6,12,12);
     // The router model, as the cartoon's badge says it: the vendor's letter, or the class number (none for the starter).
     const rg=p.rgen||0;if(rg>0){const G=RG[rg];ctx.fillStyle='#fff';ctx.font=`700 7.5px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(G.badge||String(G.cls+1),0,0.5);}
+    // How many routers, when there is more than one (the box behind says "more than one", this says how many).
+    const ro=p.routers||1;if(ro>=2){const t2='×'+ro;ctx.font=`700 7px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';
+      ctx.lineWidth=2.4;ctx.strokeStyle=scDark()?'rgba(12,20,29,.9)':'rgba(255,255,255,.95)';ctx.strokeText(t2,2,-13);ctx.fillStyle=scDark()?'#DCE4EC':'#25313D';ctx.fillText(t2,2,-13);ctx.strokeStyle=edge;}
     // A backup generator: a small G tag on the left.
     if(p.gen){ctx.fillStyle=scDark()?'#C9D3DD':'#FFFFFF';ctx.lineWidth=1;ctx.strokeStyle=edge;ctx.fillRect(-17.5,-4.5,9,9);ctx.strokeRect(-17.5,-4.5,9,9);
       ctx.fillStyle='#25313D';ctx.font=`700 7px ${SC_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('G',-13,0.5);}}

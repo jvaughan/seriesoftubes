@@ -98,7 +98,7 @@ function hsfRampDay(){const f=S.fed;if(!f||hyper())return;
     if(hstr(d.id+'|ramp|'+S.day)%HSF_RAMP_ODDS!==0||S.offers.filter(o=>o.type==='onramp'&&o.city2===d.terms.at).length>=HSF_RAMP_MAX)continue;
     const from=Object.keys(S.pops).filter(c=>c!==d.terms.at&&popUp(c)&&bizCity(c)).sort();if(!from.length)continue;
     const T=BIZ_T.onramp,city=from[hstr(d.id+S.day)%from.length],bw=Math.min(T.opts[0],d.terms.mbps/1000);
-    S.offers.push({id:uid(),city,city2:d.terms.at,name:tr('hyper_fed.ramp_name',{net:n.name}),type:'onramp',bw,rate:Math.round((150+kmBetween(city,d.terms.at)*0.08)*T.km),reqs:[],exp:S.day+40});
+    S.offers.push({id:uid(),city,city2:d.terms.at,name:tr('hyper_fed.ramp_name',{net:n.name}),type:'onramp',bw,rate:Math.round(l2Per(kmBetween(city,d.terms.at),T)),reqs:[],exp:S.day+40});
     toast(tr('hyper_fed.ramp_call',{net:esc(n.name),city:esc(CITY[city].name)}),'goal');}}
 
 /* ---------- the deals: exits, requests, the other side's checks ---------- */

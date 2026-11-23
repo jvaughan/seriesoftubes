@@ -29,7 +29,7 @@ const rpFar=km=>1/(1+(km/RP_KM)**2);
 // How strongly the exchange at c pulls a network km away: its members (one for a new one) times the fall-off.
 const rpPull=(c,km)=>Math.max(1,ixMembers(c).length)*rpFar(km);
 // Per Gbps a month: the price of any other L2 circuit that long, with the remote peering premium.
-const rpRate=(a,b)=>Math.round((150+kmBetween(a,b)*0.08)*BIZ_T.rpeer.km*REMOTE_FEE);
+const rpRate=(a,b)=>Math.round(l2Per(kmBetween(a,b),BIZ_T.rpeer)*REMOTE_FEE);
 function rpOffer(){const T=BIZ_T.rpeer,all=[];let tot=0;
   for(const c of Object.keys(S.myIx)){if(!S.pops[c]||rpUsed(c)>=rpMax(c))continue;for(const x of rpCands(c)){const w=rpPull(c,x.km);tot+=w;all.push({...x,c,w});}}
   if(!all.length)return;let r=Math.random()*tot,x=all[all.length-1];for(const y of all)if((r-=y.w)<0){x=y;break;}

@@ -25,7 +25,7 @@ function spots0(lv){const out=[];if(gatesOpen()||S.scn)return out;const up=t=>BI
 // A spotted customer starts at the smallest size its type comes in; your level makes them bigger and more frequent.
 function spawnSpot(t,s){const T=BIZ_T[t],list=T.names.filter(n=>!S.usedNames.includes(n)),name=list.length?pick(list):pick(T.names);useName(name);
   const o={id:uid(),city:s.a,city2:s.b,name,type:t,bw:T.opts[0],reqs:[],exp:S.day+40,spot:{k:s.k,n:s.n}};
-  o.rate=T.l2?Math.round((150+kmBetween(s.a,s.b)*0.08)*T.km*(T.lat?latPay():1)*(T.div?1+REQS.diverse.bonus:1)):T.rate;
+  o.rate=T.l2?Math.round(l2Per(kmBetween(s.a,s.b),T)*(T.lat?latPay():1)*(T.div?1+reqBonus('diverse',T):1)):bizRate(t);
   if(T.lat){o.reqs=['lat'];o.latMax=latMaxOf(s.a,s.b);}else if(T.div)o.reqs=['diverse'];
   S.offers.push(o);}
 function spotWhy(o){const s=o&&o.spot;if(!s||!own(SPOT_W,s.k))return '';

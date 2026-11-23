@@ -165,5 +165,13 @@ through `bizRate()`, `l2Per()` and `reqBonus()`. Two calls made on the way: late
 `lowlat`, `flex`, `mars`) are exempt from the L2 cut, and per-site prices (`sdwan`, `l3vpn`) are not cut; only the km
 formula is.
 
+**Status (step 3):** done. `mfBuy()` (in the same file, `MF.buy`) is the bought-transit index: 1 for 180 days, then
+−8% a year, floor 0.4, and 1 without the `market` rule, like `mkt()`. It is applied inside `transitPerG()`, so the
+bill (`transitMo()`), the city panel, the NOC intern's cheapest-transit pick and the Networks tab all agree. It moves
+every port already bought, not only new ones, as `S.priceMul` does. Found for step 4: bought transit costs
+`regionMult()` more outside Europe and North America (2.5× in Asia), and `isp` customers there pay no such uplift
+(only Australia's `AU_ARPU`), so in Singapore at the floors you sell at 13.5 and buy at up to 22. The hubs (Frankfurt,
+London, Amsterdam, New York, Ashburn, Chicago) hold, and a test keeps them that way.
+
 Sources: TeleGeography IP transit and wavelength pricing posts (2025–26), Cogent FY2025 8-K, Meter and Lightyear DIA
 pricing, Lumen DIA marketplace.

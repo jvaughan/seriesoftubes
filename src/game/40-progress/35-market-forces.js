@@ -2,8 +2,9 @@
    A Normal-game option that prices customers more like the real market: wholesale transit costs more per Gbps than a
    plain terrestrial circuit, and a circuit earns its premium from being hard to deliver (diverse, no sharks, two data
    centers), not from being a circuit. Every factor is here; the price sites ask these helpers, so Classic stays exact. */
-// rate: transit-type list prices; l2: the km-priced circuit formula; req: requirement bonuses on circuits.
-const MF={rate:{isp:3,provedor:2.5,metav:1.5,cgame:1.3},l2:0.3,req:2};
+// rate: transit-type list prices; l2: the km-priced circuit formula; req: requirement bonuses on circuits;
+// buy: the transit you buy, flat for its first days, then cheaper by yr a year down to floor of its list price.
+const MF={rate:{isp:3,provedor:2.5,metav:1.5,cgame:1.3},l2:0.3,req:2,buy:{free:180,yr:0.08,floor:0.4}};
 const mfOn=()=>modeOn('forces');
 // What a transit-type customer pays per Gbps before the market moves it.
 const bizRate=t=>{const T=BIZ_T[t],f=mfOn()&&MF.rate[t];return f?Math.round(T.rate*f):T.rate;};
@@ -11,3 +12,7 @@ const bizRate=t=>{const T=BIZ_T[t],f=mfOn()&&MF.rate[t];return f?Math.round(T.ra
 const l2Per=(km,T,f=T.km)=>(150+km*0.08)*f*(mfOn()&&!T.lat?MF.l2:1);
 // A requirement's bonus. On a circuit, being hard to deliver pays double; latency-priced circuits keep Classic bonuses.
 const reqBonus=(k,T)=>REQS[k].bonus*(mfOn()&&T&&T.l2&&!T.lat?MF.req:1);
+/* What bought transit costs against its list price. Upstreams cut prices too, a little slower than you can (the customer
+   market falls about 10% a year to 30%), so what you sell never sinks below what you pay for it. Without the market
+   rule it stays at 1, like the customer market. */
+const mfBuy=(d=S&&S.day)=>{const B=MF.buy;return mfOn()&&rule('market')&&d>B.free?Math.max(B.floor,Math.pow(1-B.yr,(d-B.free)/365)):1;};

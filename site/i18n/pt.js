@@ -6831,6 +6831,8 @@
 "settings.pause_on_outages_that_hurt":"Pausar em falhas que doem",
 "settings.pause_when_a_customer_is_furious":"Pausar quando um cliente estiver furioso",
 "settings.quiet_notifications":"Notificações discretas",
+"settings.real_names":"Nomes reais das empresas",
+"settings.real_names_note":"Mostra a empresa real por trás de cada trocadilho. Só na tela; o seu save mantém os nomes do jogo. Recarrega a página.",
 "settings.saved_on_this_device":"Salvo neste dispositivo.",
 "settings.serious_tubes":"Serious Tubes",
 "settings.serious_tubes_note":"Estes tubos são sérios. Troca o visual de desenho animado e as frases originais por algo pretensioso demais.",

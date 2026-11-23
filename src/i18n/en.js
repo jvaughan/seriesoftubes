@@ -6832,6 +6832,8 @@
 "settings.pause_on_outages_that_hurt":"Pause on outages that hurt",
 "settings.pause_when_a_customer_is_furious":"Pause when a customer is furious",
 "settings.quiet_notifications":"Quiet notifications",
+"settings.real_names":"Real company names",
+"settings.real_names_note":"Shows the real company behind each pun. Display only; your save keeps the game names. Reloads the page.",
 "settings.saved_on_this_device":"Saved on this device.",
 "settings.serious_tubes":"Serious Tubes",
 "settings.serious_tubes_note":"These tubes are serious. Swap the original cartoon appearance and phrases for something far too pretentious.",

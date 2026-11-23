@@ -37,7 +37,7 @@ test('the clock buttons set the pace, or give the clock to the agent, and are re
 
 test('the game\'s preferences stay exactly as they are', () => {
   const a = agent();
-  assert.deepEqual(Object.keys(a.ev('PREF_DEF')).sort(), ['pauseFurious', 'pauseIncident', 'quiet', 'serious', 'warnUnhappy']);
+  assert.deepEqual(Object.keys(a.ev('PREF_DEF')).sort(), ['pauseFurious', 'pauseIncident', 'quiet', 'realNames', 'serious', 'warnUnhappy']);
   a.ev("ACT.prefSet({v:'pauseFurious:0'})");
   assert.equal(a.ev('PREFS.pauseFurious'), false);
   a.ev("ACT.prefSet({v:'agent:1'})");

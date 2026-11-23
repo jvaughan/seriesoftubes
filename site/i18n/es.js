@@ -6831,6 +6831,8 @@
 "settings.pause_on_outages_that_hurt":"Pausar con caídas que duelen",
 "settings.pause_when_a_customer_is_furious":"Pausar cuando un cliente está furioso",
 "settings.quiet_notifications":"Notificaciones discretas",
+"settings.real_names":"Nombres reales de empresas",
+"settings.real_names_note":"Muestra la empresa real detrás de cada juego de palabras. Solo en pantalla; tu partida guarda los nombres del juego. Recarga la página.",
 "settings.saved_on_this_device":"Guardado en este dispositivo.",
 "settings.serious_tubes":"Serious Tubes",
 "settings.serious_tubes_note":"Estos tubos van en serio. Cambia el aspecto de dibujos animados y las frases originales por algo demasiado pretencioso.",

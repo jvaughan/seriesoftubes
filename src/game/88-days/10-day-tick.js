@@ -162,10 +162,11 @@ function spawnOffer(){if(hyper()){hsSpawn();return;} // a Hyperscaler sells clou
   let bw=T.lv>=2?pick(T.opts):pick(T.opts.slice(0,mine.length>=4?4:3));
   const list=(T.names||BIZ_N).filter(n=>!S.usedNames.includes(n));
   let name=list.length?pick(list):(T.names?pick(T.names):'Startup #'+Math.floor(Math.random()*999));
-  useName(name);
   if(t==='provedor')city=pick(br);
   if(t==='isp'&&dense.length&&Math.random()<0.5)city=pick(dense);
   if(t==='hft'){const fin=['nyc','chi','lon','fra','tok','sin','hkg','ams','ash'],mf=mine.filter(c=>fin.includes(c));city=mf.length?pick(mf):pick(mine);city2=pick(fin.filter(c=>c!==city));}
+  if(!mfBuyer(t,city))return;
+  useName(name);
   let rate=Math.round(T.l2?l2Per(kmBetween(city,city2),T)*(T.lat?latPay():1):cityRate(t,city));
   if(CITY[city].au&&!T.l2&&!T.fiber&&!T.event)bw=Math.min(bw,pick(T.opts.slice(0,2)));
   if(T.div&&!reqCan('diverse',{city,city2}))return;

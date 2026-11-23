@@ -184,6 +184,34 @@ test('Market Forces: wholesale buyers pay their city\'s transit price, everyone 
   assert.deepEqual(errors, []);
 });
 
+test('Market Forces: wholesale buyers turn up in thin markets as seldom as those are dear', () => {
+  const { ev, errors } = load();
+  start(ev, ['forces']);
+  for (const c of ['fra', 'lon', 'ash', 'sin', 'sao']) assert.equal(ev(`mfDemand('${c}')`), 1, c);
+  assert.ok(Math.abs(ev("mfDemand('lag')") - Math.sqrt(279 / 1000)) < 1e-9);
+  assert.equal(ev("mfDemand('alg')"), 0.1, 'PeeringDB knows nobody in Algiers');
+  // Where PeeringDB sees almost nobody, transit is at its dearest, and a wholesale buyer is worth less a day than in a hub.
+  const rich = JSON.parse(ev("JSON.stringify(Object.keys(CITY_PDB).filter(c=>CITY[c]&&CITY_PDB[c][1]<20&&mfDemand(c)*regionMult(c)>=1))"));
+  assert.deepEqual(rich, []);
+  // Seeded: about one wholesale buyer in ten shows up in Algiers, every one in Frankfurt, and retail is never held back.
+  const seen = (t, c) => ev(`(()=>{__reseed(4242);let n=0;for(let i=0;i<3000;i++)if(mfBuyer('${t}','${c}'))n++;return n;})()`);
+  const alg = seen('isp', 'alg');
+  assert.ok(alg > 220 && alg < 380, `Algiers: ${alg} of 3000`);
+  assert.equal(seen('isp', 'fra'), 3000);
+  assert.equal(seen('dia', 'alg'), 3000);
+  // The spotted cloud-gaming offers too.
+  const spots = ev("(()=>{__reseed(99);let n=0;for(let i=0;i<300;i++){const k=S.offers.length;spawnSpot('cgame',{a:'alg',b:null,k:'eye',n:0});if(S.offers.length>k)n++;S.offers.length=k;}return n;})()");
+  assert.ok(spots > 10 && spots < 55, `${spots} of 300 spotted in Algiers`);
+  assert.deepEqual(errors, []);
+});
+
+test('with the option off, every wholesale buyer turns up and the random stream is untouched', () => {
+  const { ev, errors } = load();
+  start(ev);
+  assert.equal(ev("(()=>{__reseed(7);for(let i=0;i<50;i++)if(!mfBuyer('isp','alg'))return 'held back';const x=Math.random();__reseed(7);return x===Math.random();})()"), true);
+  assert.deepEqual(errors, []);
+});
+
 test('every km-priced circuit goes through l2Per(), so no price site can skip the option', () => {
   const fs = require('node:fs'), path = require('node:path');
   const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(d, e.name)) : e.name.endsWith('.js') ? [path.join(d, e.name)] : []);

@@ -1168,22 +1168,7 @@ const RN_C=new Map();
 // Cached: the map draws the same labels every frame.
 function rnText(v){if(typeof v!=='string'||!v||v.length>10000)return v;let r=RN_C.get(v);if(r!==undefined)return r;
   r=v.replace(RN_RE,(_,b,f)=>b+RN_MAP[f]);if(RN_C.size>=5000)RN_C.clear();RN_C.set(v,r);return r;}
-// Form controls keep what the player typed (and an <option> without value= is its own text).
-const RN_SKIP='script,style,noscript,pre,code,textarea,input,select,option,[contenteditable]';
-function rnVisit(n){if(n.nodeType===3){const p=n.parentElement;if(p&&!p.isContentEditable){const a=rnText(n.nodeValue);if(a!==n.nodeValue)n.nodeValue=a;}return;}
-  for(const k of ['title','aria-label','alt']){const v=n.getAttribute(k);if(v){const a=rnText(v);if(a!==v)n.setAttribute(k,a);}}}
-function rnScan(root){if(!root||!root.isConnected)return;
-  if(root.nodeType===3){if(root.parentElement&&!root.parentElement.closest(RN_SKIP))rnVisit(root);return;}
-  if(root.nodeType!==1||root.closest(RN_SKIP))return;rnVisit(root);
-  const w=document.createTreeWalker(root,5,{acceptNode:n=>n.nodeType===1&&n.matches(RN_SKIP)?2:1});let x;while((x=w.nextNode()))rnVisit(x);}
-function rnInstall(){
-  for(const C of [window.CanvasRenderingContext2D,window.OffscreenCanvasRenderingContext2D]){if(!C)continue;const p=C.prototype;
-    for(const m of ['fillText','strokeText','measureText']){const f=p[m];if(typeof f==='function')p[m]=function(t,...a){return f.call(this,rnText(t),...a);};}}
-  const go=()=>{const b=document.body;if(!b)return;rnScan(b);const q=new Set();let on=false;
-    const flush=()=>{on=false;const w=[...q];q.clear();for(const n of w)rnScan(n);};
-    new MutationObserver(ch=>{for(const c of ch){if(c.type==='childList')for(const n of c.addedNodes)q.add(n);else q.add(c.target);}
-      if(!on&&q.size){on=true;requestAnimationFrame(flush);}}).observe(b,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['title','aria-label','alt']});};
-  if(document.body)go();else document.addEventListener('DOMContentLoaded',go,{once:true});}
 // Only names change: dc stays truthy where it was, as gameplay checks it.
 function rnSites(){for(const id in RN_DC){const C=CITY[id];if(!C||!C.dc)continue;const [a,b]=RN_DC[id];C.dc=a;C.dcN=1;if(b){C.dc2=b;C.dc2N=1;}}}
-if(pref('realNames')){rnSites();rnInstall();}
+// Names reach the screen through the display filter (29-display-filter.js).
+if(pref('realNames')){rnSites();DISP_TX.push(rnText);dispInstall();}

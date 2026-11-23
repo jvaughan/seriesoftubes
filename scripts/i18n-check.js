@@ -14,6 +14,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const D = require('./lib/dict');
 const { CALL } = require('./legacy/labels');
+const { keyedTables } = require('./lib/compile-labels');
 
 const SITE = path.join(__dirname, '..', 'site');
 // The development page: it has every label, the agent's (src/agent/) too.
@@ -43,7 +44,10 @@ function sourceLabels(html) {
   }
   // A label the build cannot see (a bare string, not the first argument of tr/trn/N_) would not be shrunk
   // along with its dictionary entry, and would show as raw text in the shipped game.
-  const code = scripts.replace(/\(window\.I18N=window\.I18N\|\|\{\}\)\.en=\{[\s\S]*?\n\};\n/, '');
+  let code = scripts.replace(/\(window\.I18N=window\.I18N\|\|\{\}\)\.en=\{[\s\S]*?\n\};\n/, '');
+  // Label-keyed tables (SERIOUS_EN): the build re-keys them with the English, so their keys are labels it sees.
+  const keyed = keyedTables(code);
+  for (const t of [...keyed].reverse()) code = code.slice(0, t.a) + code.slice(t.b);
   const seen = new Set();
   for (const m of code.matchAll(CALL)) seen.add(m.index + m[0].indexOf(m[2]));
   for (const m of code.matchAll(/(['"\x60])([a-z0-9_]+(?:\.[a-z0-9_]+)+)\1/g)) {
@@ -58,7 +62,7 @@ function sourceLabels(html) {
     if (!el.closest('noscript')) problems.push(`<${el.tagName.toLowerCase()} ${el.hasAttribute('title') ? 'title' : 'aria-label'}="…"> in the markup has no data-i18n-${el.hasAttribute('title') ? 'title' : 'aria-label'} label`);
   }
   for (const [l] of markup) LABEL.test(l) ? labels.add(l) : problems.push(`data-i18n="${l}": not a label`);
-  return { labels, markup, problems };
+  return { labels, markup, problems, keyed };
 }
 
 function loadDict(file) {
@@ -95,6 +99,7 @@ function check(en, dict) {
 function checkEnglish(src, en) {
   const out = [...src.problems];
   for (const l of src.labels) if (!(l in en)) out.push(`label used but not in src/i18n/en.js: ${l}`);
+  for (const t of src.keyed || []) for (const l of t.keys) if (!(l in en)) out.push(`${t.open} has a label not in src/i18n/en.js: ${l}`);
   for (const l of Object.keys(en)) {
     if (!src.labels.has(l)) out.push(`in src/i18n/en.js but never used: ${l}`);
     if (!LABEL.test(l)) out.push(`not a label like 'area.some_words': ${l}`);

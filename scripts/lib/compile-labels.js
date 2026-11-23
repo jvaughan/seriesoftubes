@@ -26,6 +26,32 @@ function plan(html, en) {
 
 const rekey = (dict, map) => Object.fromEntries(Object.entries(dict).map(([k, v]) => [map.get(k) || k, v]));
 
+// Tables in the code keyed by label, merged into the English at load (local fork: SERIOUS_EN, the Serious Tubes
+// text). One "label":… entry per line, closed by a line `};`. Their keys get the same ids as the English, or the
+// shipped page would merge entries nothing reads.
+const KEYED = ['const SERIOUS_EN={'];
+function keyedTables(text) {
+  const out = [];
+  for (const open of KEYED) {
+    const a = text.indexOf(open);
+    if (a < 0) continue;
+    const b = text.indexOf('\n};', a);
+    if (b < 0) throw new Error(`compile-labels: ${open} is not closed by a line "};"`);
+    const body = text.slice(a + open.length, b);
+    out.push({ open, a, b, body, keys: [...body.matchAll(/^"([^"]+)":/gm)].map((m) => m[1]) });
+  }
+  return out;
+}
+function rekeyTables(text, map, en) {
+  for (const t of keyedTables(text).reverse()) {
+    const stale = t.keys.filter((k) => !(k in en));
+    if (stale.length) throw new Error(`compile-labels: ${t.open} has labels with no English: ${stale.slice(0, 5).join(', ')}`);
+    const body = t.body.replace(/^"([^"]+)":/gm, (m, l) => (map.has(l) ? `"${map.get(l)}":` : m));
+    text = text.slice(0, t.a + t.open.length) + body + text.slice(t.b);
+  }
+  return text;
+}
+
 // The page and the dictionaries with short ids. `dicts` is {lang: dict} for the translations.
 function compile(html, en, dicts) {
   const { map } = plan(html, en);
@@ -40,6 +66,7 @@ function compile(html, en, dicts) {
     const l = lit.slice(1, -1);
     return map.has(l) ? m.replace(lit, `'${map.get(l)}'`) : m;
   });
+  out = rekeyTables(out, map, en);
   // Static markup.
   out = out.replace(/ data-i18n(-aria-label|-title)?="([^"]+)"/g, (m, attr, l) => (map.has(l) ? ` data-i18n${attr || ''}="${map.get(l)}"` : m));
   const left = [...out.matchAll(/(?<![\w$.])(tr|trn)\(\s*'([^']*)'/g)].map((m) => m[2]).filter((l) => LABEL.test(l) && !map.has(l) && !(l in en));
@@ -49,4 +76,4 @@ function compile(html, en, dicts) {
   return { html: out, dicts: compiled, map };
 }
 
-module.exports = { compile, plan };
+module.exports = { compile, plan, keyedTables };

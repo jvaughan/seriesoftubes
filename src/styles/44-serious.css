@@ -33,3 +33,7 @@
 :root.serious .brand .tube path:first-child{stroke:none}
 :root.serious .brand .tube path:nth-child(2){stroke:#fff;stroke-width:3}
 :root.serious .brand .tube circle{fill:#fff;stroke:none;r:3.5px}
+/* Tabs and markers written as var(--pink,#FF4F9A) (the dashboard's and dialogs' tabs, selected rows): with --pink set,
+   they take your colour too. The AI button loses its purple-to-pink gradient. */
+:root.serious{--pink:#2F6DB5}
+:root.serious .aibtn{background:var(--me)}

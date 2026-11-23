@@ -36,19 +36,18 @@ function scCityStatic(C,p,t,cs,k,ph,st){const down=st.down,edge=scEdge();
     ctx.fillStyle=hasIxAt(C.id)?'#F2B705':(scDark()?'#C9D3DD':'#FFFFFF');ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();ctx.stroke();}
   else{const col=down?'#8A91A8':SC_ME;
     if(p.site2){const dB=siteDown(C.id,'b'),cut=p.ringcut>S.day;ctx.lineWidth=1.2;ctx.setLineDash(cut?[2,3]:[]);ctx.strokeStyle=cut?'#FF4D5E':edge;
-      ctx.beginPath();ctx.moveTo(5,3);ctx.lineTo(12,7);ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle=edge;ctx.fillStyle=dB?'#8A91A8':col;ctx.fillRect(11,4,7,7);ctx.strokeRect(11,4,7,7);}
+      ctx.beginPath();ctx.moveTo(6,3);ctx.lineTo(23,5.5);ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle=edge;ctx.fillStyle=dB?'#8A91A8':col;ctx.fillRect(23,2,7,7);ctx.strokeRect(23,2,7,7);}
     ctx.lineWidth=1.3;
     if((p.routers||1)>=2){ctx.fillStyle=down?'#6E7590':SC_ME2;ctx.fillRect(-3.5,-8.5,11,11);ctx.strokeRect(-3.5,-8.5,11,11);}
     ctx.fillStyle=col;ctx.fillRect(-6,-6,12,12);ctx.strokeRect(-6,-6,12,12);
     // To the left of the square: the router's port speed (what it can do, 100G up to 3.2T) and under it how many routers
-    // there are, when more than one (the box behind says "more than one", this says how many); left of that block, a
-    // small G tag for a backup generator.
+    // there are, when more than one (the box behind says "more than one", this says how many).
     {const sp=RG[p.rgen||0].pn,ro=p.routers||1,cnt=ro>=2?'×'+ro:'',xr=-9,y1=cnt?-3.5:0.5,dk=scDark();
-      ctx.font=`700 7px ${SC_FONT}`;const w=Math.max(ctx.measureText(sp).width,cnt?ctx.measureText(cnt).width:0);
-      ctx.textAlign='right';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=2.4;ctx.strokeStyle=dk?'rgba(12,20,29,.9)':'rgba(255,255,255,.95)';ctx.fillStyle=dk?'#DCE4EC':'#25313D';
+      ctx.font=`700 7px ${SC_FONT}`;      ctx.textAlign='right';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=2.4;ctx.strokeStyle=dk?'rgba(12,20,29,.9)':'rgba(255,255,255,.95)';ctx.fillStyle=dk?'#DCE4EC':'#25313D';
       ctx.strokeText(sp,xr,y1);ctx.fillText(sp,xr,y1);if(cnt){ctx.strokeText(cnt,xr,y1+8);ctx.fillText(cnt,xr,y1+8);}
-      if(p.gen){const gx=xr-w-3-9;ctx.fillStyle=dk?'#C9D3DD':'#FFFFFF';ctx.lineWidth=1;ctx.strokeStyle=edge;ctx.fillRect(gx,-4.5,9,9);ctx.strokeRect(gx,-4.5,9,9);
-        ctx.fillStyle='#25313D';ctx.font=`700 7px ${SC_FONT}`;ctx.textAlign='center';ctx.fillText('G',gx+4.5,0.5);}
+      // A backup generator: a small G tag under the IX hexagon (the second building's link runs behind it).
+      if(p.gen){ctx.fillStyle=dk?'#C9D3DD':'#FFFFFF';ctx.lineWidth=1;ctx.strokeStyle=edge;ctx.fillRect(10,0.5,9,9);ctx.strokeRect(10,0.5,9,9);
+        ctx.fillStyle='#25313D';ctx.font=`700 7px ${SC_FONT}`;ctx.textAlign='center';ctx.fillText('G',14.5,5);}
       ctx.strokeStyle=edge;}}
   if(st.ixDraw&&!st.ixHot)scIX(C,p,t,false,0);
   if(st.inc){const x=p?-13:-SC_R[t]-6,y=p?-12:-7;ctx.fillStyle='#FF4D5E';ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();ctx.lineWidth=1.2;ctx.strokeStyle=edge;ctx.stroke();

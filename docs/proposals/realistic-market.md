@@ -191,7 +191,8 @@ numbers.
 buyer keeps its upstreams, so `CONE` stays static).
 
 - **Quote requests (`ntr`).** An `eye`/`t2` network with upstreams of its own, not China's, not another player's, that
-  shares a city with you asks on its own hashed cycle (1–3 years, `ntAsks()`), from level 3, at most 3 open. You decline
+  shares a city with you asks on its own hashed cycle (1–3 years, `ntAsks()`), from level 3, at most 3 open, and
+  never in a Hyperscaler game (it buys transit but never sells it; `sanitize()` drops any such customers too). You decline
   or quote list / −10% / −20% (`ACT.ntQuote`; Accept, the sales agents and the intern quote list). 3–7 days later it
   scores you (`ntScore()`): reach (`reachSolo()`), 60% of it weighted by reach without transit, × Tier (2 / 1.4),
   × diversity (the share of your transit providers that are its own upstreams cuts up to 70%), × service in that city,

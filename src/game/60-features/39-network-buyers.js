@@ -71,8 +71,8 @@ function ntPays(n,pol=ppol()){if(!n||n.fed||n.cn||merged(n.id)||n.type==='t1'||p
 const ntWant=n=>((R&&R.demand)||0)*NSH[n.id];
 
 /* Once a day, before routing (dayPreRun): today's traffic, answers to quotes, contracts that lost their reason, and
-   who asks. Only in the mode. */
-function ntDay(d){if(!mfOn())return;
+   who asks. Only in the mode, and never for a Hyperscaler, which buys transit but never sells it. */
+function ntDay(d){if(!mfOn()||hyper())return;
   for(const b of S.biz)if(ntT(b.type))ntUseDay(b,d);
   for(const o of S.offers.slice())if(o.type==='ntr'&&o.rfq&&o.rfq.q!==null&&d>=o.rfq.due)ntAnswer(o);
   // Paid peering ends with its term once they can reach you free (you opened up, or bought transit again).

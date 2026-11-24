@@ -137,6 +137,23 @@ test('Market Forces: traffic moves with the week, away from you while you drop i
   assert.deepEqual(errors, []);
 });
 
+test('Market Forces: a Hyperscaler buys transit but never sells it, so nobody asks it for any', () => {
+  const { ev, errors } = load();
+  start(ev);
+  ev("ACT.charter({k:'hyper'})");
+  assert.equal(ev('hyper()'), true);
+  ev('S.lvl=4');
+  // The networks around it would ask (ntAsk on its own), but the day never lets them.
+  assert.ok(ev("(()=>{S.offers=[];for(let d=S.day+1;d<S.day+1200;d++)ntAsk(d);const n=S.offers.length;S.offers=[];return n;})()") > 0);
+  ev('for(let d=S.day+1;d<S.day+1200;d++)ntDay(d)');
+  assert.equal(ev('S.offers.filter(o=>ntT(o.type)).length'), 0);
+  // A save that has some anyway (made before this check) loses them.
+  sign(ev);
+  ev("S.offers.push({id:'rq',city:'fra',city2:null,net:'mag',name:'Dive-Bomb Magpie',type:'ntr',bw:50,base:100,rate:45,mk:1,reqs:[],exp:S.day+20,rfq:{q:null,due:0,r:1}});sanitize(S)");
+  assert.equal(ev('S.biz.concat(S.offers).filter(o=>ntT(o.type)).length'), 0);
+  assert.deepEqual(errors, []);
+});
+
 test('Market Forces: a customer network brings its cone, and takes it away when it leaves', () => {
   const { ev, errors } = load();
   start(ev);

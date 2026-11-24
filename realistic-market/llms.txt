@@ -24,7 +24,7 @@ for every company:
   RPKI and BGP hijacks, DDoS, cooling failures, Red Sea and Baltic cable cuts,
   sovereign internet drills and other geopolitical events.
 
-Version: 5.3.0 (2026-11-24)
+Version: 5.4.0 (2026-11-24)
 Source: https://github.com/fjaeckel/seriesoftubes
 
 ## Learn how the internet really works

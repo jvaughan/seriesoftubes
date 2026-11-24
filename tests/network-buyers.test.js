@@ -35,6 +35,12 @@ test('Market Forces: a network asks for quotes only on its own cycle, only where
     assert.equal(o.q, null, 'nothing is quoted until you quote');
     assert.ok(o.base >= 10 && o.base <= ev('MF.net.max') && o.bw <= o.base, JSON.stringify(o));
   }
+  // Worked out once per game, and the same as working it out each time.
+  const cyc = () => J(ev, "['bgs','mag','tny','aat'].map(id=>[ntCyc(id),MF.net.cyc[hstr(S.asn+'|cyc|'+id)%MF.net.cyc.length],ntRound(id,S.day+500),Math.floor((S.day+500+hstr(id))/MF.net.cyc[hstr(S.asn+'|cyc|'+id)%MF.net.cyc.length])])");
+  for (const [a, b, c, d] of cyc()) { assert.equal(a, b); assert.equal(c, d); }
+  ev('window.__asn=S.asn;S.asn=S.asn+17');
+  for (const [a, b, c, d] of cyc()) { assert.equal(a, b, 'another game, other cycles'); assert.equal(c, d); }
+  ev('S.asn=__asn');
   const by = {};
   for (const o of seen) { if (by[o.net] !== undefined) assert.ok(o.d - by[o.net] >= ev(`ntCyc('${o.net}')`), `${o.net} asked again too soon`); by[o.net] = o.d; }
   // Left open, requests pile up to the cap and no further.
@@ -151,6 +157,25 @@ test('Market Forces: a Hyperscaler buys transit but never sells it, so nobody as
   sign(ev);
   ev("S.offers.push({id:'rq',city:'fra',city2:null,net:'mag',name:'Dive-Bomb Magpie',type:'ntr',bw:50,base:100,rate:45,mk:1,reqs:[],exp:S.day+20,rfq:{q:null,due:0,r:1}});sanitize(S)");
   assert.equal(ev('S.biz.concat(S.offers).filter(o=>ntT(o.type)).length'), 0);
+  assert.deepEqual(errors, []);
+});
+
+test('Market Forces: paid peering buys a port into your network, so only that port can disappoint it', () => {
+  const { ev, errors } = load();
+  start(ev);
+  build(ev);
+  sign(ev, 'nfx', 'ncone');
+  sign(ev, 'bgs');
+  // No transit: you reach little of the internet, and a transit customer suffers; a paying peer does not care.
+  ev('S.transit=[];compute()');
+  assert.ok(ev('reachSolo()') < 0.99);
+  const nc = "S.biz.find(b=>b.type==='ncone')", tr = "S.biz.find(b=>b.type==='ntr')";
+  assert.equal(ev(`bizSf(${nc})`), 1);
+  assert.deepEqual(J(ev, `bizWhy(${nc})`), []);
+  assert.ok(J(ev, `bizWhy(${tr})`).length > 0);
+  ev(`${nc}.mood=90;${tr}.mood=90;${nc}.since=${tr}.since=S.day-30;for(let i=0;i<2;i++){S.nextFail=S.day+99;S.nextEvent=S.day+99;dayTick();}`);
+  assert.ok(ev(`${nc}.mood`) > 90, 'the paying peer is content');
+  assert.ok(ev(`(b=>!b||b.mood<90)(${tr})`), 'the transit customer is not (or has left)');
   assert.deepEqual(errors, []);
 });
 

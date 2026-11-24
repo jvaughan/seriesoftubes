@@ -212,8 +212,14 @@ buyer keeps its upstreams, so `CONE` stays static).
   like `ntr` at 40% of wholesale on what crosses its port; ends at its term once it can reach you free.
 - **Closed** keeps its 0.6× offer penalty only outside the mode (`offerOdds()`); in the mode the policy texts say
   what Selective and Closed earn (`PPOL_D_MF`).
-- Perf (big-network fixture with the mode on and 45 network customers, against HEAD): `compute()` 23.7 → 25.4 ms
-  (+7%, p 0.36), `dayTick()` 28.7 → 31.8 ms (+11%, p 0.51), within noise. Classic: routing identical, no change.
+- Perf. Classic: routing identical, no change. The mode's own daily work (`ntDay()`, cycles cached per game) is
+  0.13 ms a day, 0.19 ms with 45 network customers. A network customer is a connection like a PNI: steady state, 45 of
+  them add about 0.3 ms to `compute()`, and each one that arrives or leaves rebuilds the route cache once. On the
+  big-network fixture (congested: 116 of 136 Tbps served) 18 of 45 quit within two weeks, and those rebuilds made a
+  day about 5 ms dearer over a 32-day replay (10 cache misses against 4 with as many ordinary customers). Comparing
+  against a build without phase 2 is unfair: it drops the 45 customers on load.
+- Paid peering buys a port into your network, so its happiness ignores your city's service and your reach
+  (`bizSf()`, the daily mood check, `bizWhy()`).
 
 For step 4: tune `MF.net.world` (sizes) and the score weights in play; renewals don't re-score a network yet (they go
 through `clDay()` like any customer); paid peering realistically shows up only near Tier 1, since it needs you

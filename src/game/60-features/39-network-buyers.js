@@ -15,10 +15,14 @@ Object.assign(BIZ_T,{
 const ntT=t=>!!BIZ_T[t]&&!!BIZ_T[t].ntr;
 // A stable roll in [0,1) for this game and this question.
 const ntU=k=>(hstr(((S&&S.asn)||0)+'|nt|'+k)%100000)/100000;
-// How often a network shops (one to three years), and which round of shopping a day falls in.
-const ntCyc=id=>MF.net.cyc[hstr(((S&&S.asn)||0)+'|cyc|'+id)%MF.net.cyc.length];
-const ntAsks=(id,d)=>(d+hstr(id))%ntCyc(id)===0;
-const ntRound=(id,d)=>Math.floor((d+hstr(id))/ntCyc(id));
+// How often a network shops (one to three years), and which round of shopping a day falls in. Both hang only on the
+// game's ASN and the network, so they are worked out once per game (asked of every network every day).
+let NT_CYC={asn:null,m:new Map()};
+function ntCycOf(id){const a=(S&&S.asn)||0;if(NT_CYC.asn!==a)NT_CYC={asn:a,m:new Map()};let c=NT_CYC.m.get(id);
+  if(!c)NT_CYC.m.set(id,c={n:MF.net.cyc[hstr(a+'|cyc|'+id)%MF.net.cyc.length],o:hstr(id)});return c;}
+const ntCyc=id=>ntCycOf(id).n;
+const ntAsks=(id,d)=>{const c=ntCycOf(id);return (d+c.o)%c.n===0;};
+const ntRound=(id,d)=>{const c=ntCycOf(id);return Math.floor((d+c.o)/c.n);};
 // Who buys transit at all: eyeball and Tier 2 networks with upstreams of their own (the transit-free islands do not),
 // not another player's, not China's.
 const ntBuyer=n=>!!n&&(n.type==='eye'||n.type==='t2')&&!n.fed&&!n.cn&&!!(n.up&&n.up.length)&&!merged(n.id);

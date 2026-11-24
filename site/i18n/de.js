@@ -5035,6 +5035,7 @@
 "network_buyers.quote_cut":"−{p}% anbieten",
 "network_buyers.quote_list":"Listenpreis anbieten",
 "network_buyers.resell":"Du kaufst Transit bei {up}, seinem eigenen Anbieter: Du bringst ihm wenig, also wählt es dich selten.",
+"network_buyers.resell_some":"Du kaufst einen Teil deines Transits bei {up}, seinem eigenen Anbieter, also bringst du ihm etwas weniger.",
 "network_buyers.selective_desc":"Kleine Netze am Exchange und Neulinge mit aktueller PeeringDB bekommen eine Session; der Rest wird still abgelehnt. Keine Route-Server. Sobald du keinen Transit mehr kaufst, zahlen Content-Netze fürs Peering, die dich nicht über einen Peer oder Kunden erreichen.",
 "network_buyers.terms":"Commit {commit} von etwa {g} · {price}/Gbps, 95. Perzentil",
 "network_buyers.type":"Netz kauft Transit",

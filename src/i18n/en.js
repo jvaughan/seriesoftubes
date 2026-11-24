@@ -5034,6 +5034,7 @@
 "network_buyers.quote_cut":"Quote −{p}%",
 "network_buyers.quote_list":"Quote list price",
 "network_buyers.resell":"You buy transit from {up}, its own provider: you add little, so it rarely picks you.",
+"network_buyers.resell_some":"You buy some of your transit from {up}, its own provider, so you add a little less.",
 "network_buyers.selective_desc":"Small networks on the exchange and newcomers with an up-to-date PeeringDB get a session; the rest are quietly declined. No route servers. Once you buy no transit, content networks that cannot reach you through a peer or a customer pay to peer.",
 "network_buyers.terms":"commit {commit} of about {g} · {price}/Gbps, 95th percentile",
 "network_buyers.type":"Network buying transit",

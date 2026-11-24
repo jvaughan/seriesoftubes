@@ -5033,6 +5033,7 @@
 "network_buyers.quote_cut":"Proposer −{p} %",
 "network_buyers.quote_list":"Proposer le prix catalogue",
 "network_buyers.resell":"Vous achetez du transit à {up}, son propre fournisseur : vous lui apportez peu, il vous choisit rarement.",
+"network_buyers.resell_some":"Vous achetez une partie de votre transit à {up}, son propre fournisseur : vous lui apportez un peu moins.",
 "network_buyers.selective_desc":"Les petits réseaux de l'exchange et les nouveaux venus avec une PeeringDB à jour obtiennent une session ; les autres sont discrètement refusés. Pas de route servers. Dès que vous n'achetez plus de transit, les réseaux de contenu qui ne vous atteignent pas par un pair ou un client paient pour peerer.",
 "network_buyers.terms":"engagement {commit} sur environ {g} · {price}/Gbps, 95e centile",
 "network_buyers.type":"Réseau qui achète du transit",

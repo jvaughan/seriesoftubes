@@ -5033,6 +5033,7 @@
 "network_buyers.quote_cut":"Ofertar −{p}%",
 "network_buyers.quote_list":"Ofertar precio de lista",
 "network_buyers.resell":"Compras tránsito a {up}, su propio proveedor: le aportas poco, así que rara vez te elige.",
+"network_buyers.resell_some":"Compras parte de tu tránsito a {up}, su propio proveedor, así que le aportas algo menos.",
 "network_buyers.selective_desc":"Las redes pequeñas del exchange y las nuevas con PeeringDB al día obtienen sesión; al resto se le rechaza en silencio. Sin route servers. Cuando ya no compras tránsito, las redes de contenido que no te alcanzan por un peer o un cliente pagan por el peering.",
 "network_buyers.terms":"compromiso {commit} de unos {g} · {price}/Gbps, percentil 95",
 "network_buyers.type":"Red que compra tránsito",

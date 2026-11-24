@@ -112,8 +112,10 @@ function ntOfferBtns(o){if(o.type!=='ntr')return null;const r=o.rfq||{};
   return MF.net.cut.map((c,i)=>btn(c?tr('network_buyers.quote_cut',{p:Math.round(c*100)}):tr('network_buyers.quote_list'),'ntQuote',{id:o.id,cut:c},i?'ghost sm':'green sm')).join('');}
 // Its terms: commit, the traffic behind it, and the price per Gbps (the quoted one once you have quoted).
 function ntTerms(o){const q=o.rfq&&o.rfq.q>0?o.rfq.q:0;return tr('network_buyers.terms',{commit:fmtG(o.bw),g:fmtG(o.base||o.bw),price:fmt$(Math.round(o.rate*(1-q)))});}
-// An offer's warning: you buy transit from its own provider, so you add little and rarely win (bRisk()).
-function ntRisk(o){if(!o.rfq)return '';const n=NET[o.net],rs=n&&ntResell(n);return rs?`<div class="why">${tr('network_buyers.resell',{up:esc(NET[rs.net].name)})}</div>`:'';}
+// An offer's warning (bRisk()): you buy transit from its own provider, so you add less. Strong when half or more of your
+// providers are its own (a 35% to 70% cut), mild below that.
+function ntRisk(o){if(!o.rfq)return '';const n=NET[o.net],rs=n&&ntResell(n);if(!rs)return '';const up=esc(NET[rs.net].name);
+  return `<div class="why">${ntOverlap(n)>=0.5?tr('network_buyers.resell',{up}):tr('network_buyers.resell_some',{up})}</div>`;}
 // A customer's line: its 95th percentile, its commit and the month's bill.
 function ntLine(b){const q=p95(b,ntCarried(b));return tr('city_panel.95th_pct_p95_commit_commit_bill',{p95:fmtG(q),commit:fmtG(b.bw),bill:fmt$(Math.round(Math.max(b.bw,q)*b.rate))});}
 // Save repair for both types (fixBiz): numbers that are numbers, a bill history that is one, a quote that is a choice.

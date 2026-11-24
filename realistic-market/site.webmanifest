@@ -1,0 +1,45 @@
+{
+  "name": "Series of Tubes",
+  "short_name": "Tubes",
+  "description": "A cartoon game about building the internet.",
+  "start_url": "/seriesoftubes/realistic-market/",
+  "scope": "/seriesoftubes/realistic-market/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#57C4E5",
+  "theme_color": "#57C4E5",
+  "categories": [
+    "games",
+    "education",
+    "simulation"
+  ],
+  "icons": [
+    {
+      "src": "/seriesoftubes/realistic-market/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/seriesoftubes/realistic-market/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/seriesoftubes/realistic-market/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/seriesoftubes/realistic-market/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "id": "/seriesoftubes/realistic-market/",
+  "display_override": [
+    "standalone",
+    "fullscreen"
+  ],
+  "shortcuts": []
+}

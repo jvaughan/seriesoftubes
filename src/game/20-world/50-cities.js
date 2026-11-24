@@ -250,6 +250,8 @@ const CITIES=[
  {id:'mct',name:'Muscat',x:0,y:0,land:'eu',reg:'AS',cc:'OM',P:50,ix:'Halwa-IX',dc:'Frankincense Colo',note:tr('cities.oman_s_capital_just_outside_the')},
  {id:'mle',name:'Malé',x:0,y:0,land:'mv',reg:'AS',cc:'MV',P:4,ix:'',dc:'One-Metre-Up DC',note:tr('cities.the_maldives_capital_a_stop_on')},
  {id:'fuk',name:'Fukuoka',x:0,y:0,land:'jp',reg:'AS',cc:'JP',P:120,ix:'Mentaiko-IX',dc:'Hakata Ramen Racks',note:tr('cities.japan_s_closest_city_to_korea')},
+ // Hokkaido, joined to Honshu by the fiber in the Seikan Tunnel
+ {id:'spk',name:'Sapporo',x:0,y:0,land:'jp',reg:'AS',cc:'JP',P:80,ix:'Jingisukan-IX',dc:'Clock Tower Colo',note:tr('cities.hokkaido_s_capital_snow_sculptures_miso')},
  // The Philippines beyond Luzon
  {id:'ceb',name:'Cebu',x:0,y:0,land:'ceb',reg:'AS',cc:'PH',ph:true,arpu:PH_ARPU,P:125,ix:'GotchaFIX Cebu',ixCheap:1.8,dc:"Magellan's Last Rack",note:tr('cities.the_philippines_second_city_reached')},
  {id:'dvo',name:'Davao',x:0,y:0,land:'mdn',reg:'AS',cc:'PH',ph:true,arpu:PH_ARPU,P:135,ix:'GotchaFIX Davao',ixCheap:1.8,dc:"Heimdall's Hut",note:tr('cities.mindanao_s_big_city_and_the')},

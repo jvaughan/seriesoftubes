@@ -371,6 +371,7 @@ const CITY_PDB={
  smr:[1,3,10], // est.
  sof:[15,451,889],
  spi:[1,2,33300], // est.
+ spk:[3,9,1330], // est.: JPIX Hokkaido and JPNAP Sapporo have 3 and 6 networks; PeeringDB counts none in its three buildings
  sre:[0,0,71], // est.
  ssa:[13,44,9693],
  ssg:[1,1,7],

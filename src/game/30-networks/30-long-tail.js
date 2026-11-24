@@ -60,6 +60,7 @@ const TAIL=[
  ['Volunteer Fire Brigade Wi-Fi','eye',['vie','zrh'],tr('long_tail.runs_the_village_network_between')],
  ['Peach State Hosting','cdn',['atn'],tr('long_tail.sweet_fuzzy_and_surprisingly')],
  ['Chowder Hosting','cdn',['bos'],tr('long_tail.thick_comforting_and_very_new')],
+ ['Drift Ice Networks','eye',['spk'],tr('long_tail.hokkaido_s_own_isp_power_company')],
 ];
 /* Who the long tail buys transit from (#85): small networks almost always buy it from a big carrier where they sit,
    usually the cheapest Tier 1 in town or two of them. One or two of the founding five Tier 1s with a PoP in their home

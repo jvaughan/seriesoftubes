@@ -15,7 +15,7 @@ function mkt(){if(!S||!rule('market'))return 1;const s=hwShock();return mktBase(
 // Terms in months: enterprise and hosting 1–3 years, wholesale and circuits 2–5, IRUs and fiber pairs 10–20.
 const CL_TERMS={ip:[12,24,36],whole:[24,36,48,60],iru:[120,180,240]};
 // Events, capacity deals and scripted scenario customers have their own endings.
-const clKind=t=>{const T=BIZ_T[t];if(!T||T.event||T.cap)return null;if(t==='dfpair'||t==='pairs')return 'iru';return T.l2||T.fiber||t==='isp'||t==='gpu'?'whole':'ip';};
+const clKind=t=>{const T=BIZ_T[t];if(!T||T.event||T.cap)return null;if(t==='dfpair'||t==='pairs')return 'iru';return T.l2||T.fiber||T.ntr||t==='isp'||t==='gpu'?'whole':'ip';};
 const clOn=b=>!!b&&!b.scripted&&!!clKind(b.type);
 // A stable roll in [0,1) for this customer, this term and this question.
 // Who the customer is (names are unique), not its id: ids come from the clock and would differ every time a game is replayed.
@@ -60,7 +60,7 @@ const clWhere=b=>bCities(b).map(c=>CITY[c].name).join(' ⇄ ');
 
 // Growing: the next size up their type sells, or twice the bandwidth past the top one. Fiber grows by renewing.
 // A type with a most (max) never grows past it (#137).
-function clGrow(b){const T=BIZ_T[b.type];if(T.fiber||(T.max&&b.bw>=T.max))return false;const up=(T.opts||[]).find(x=>x>b.bw);b.bw=T.max?Math.min(T.max,up||b.bw*2):up||b.bw*2;return true;}
+function clGrow(b){const T=BIZ_T[b.type];if(T.fiber||(T.max&&b.bw>=T.max))return false;const up=(T.opts||[]).find(x=>x>b.bw),was=b.bw;b.bw=T.max?Math.min(T.max,up||b.bw*2):up||b.bw*2;ntScale(b,was);return true;}
 // Leaving, or one of the not-your-fault turns that keeps them. Returns what the log says.
 function clLeave(b,d,out){const T=BIZ_T[b.type],v={name:esc(b.name),city:esc(clWhere(b))};
   if(b.mood<50){clGone(b,'sad');out.lost.push(tr('lifecycle.left_unhappy',v));return;}
@@ -70,7 +70,7 @@ function clLeave(b,d,out){const T=BIZ_T[b.type],v={name:esc(b.name),city:esc(clW
   if(k==='moved'){const reg=CITY[b.city].reg,to=Object.keys(S.pops).filter(c=>c!==b.city&&CITY[c].reg===reg&&bizCity(c)).sort();
     const c2=to.length&&clR(b,'stay')<0.5?clPick(to,b,'to'):null;
     if(c2){const from=CITY[b.city].name;b.city=c2;clRenew(b,clFair(b));clNote('ren');out.ok.push(tr('lifecycle.moved_stays',{name:v.name,from:esc(from),to:esc(CITY[c2].name)}));return;}}
-  if(k==='multi'&&b.bw>=2){const keep=(T.opts||[]).filter(x=>x<=b.bw/2).pop()||b.bw/2;b.bw=keep;clRenew(b,clFair(b));clNote('ren');out.ok.push(tr('lifecycle.multihomed_keeps',{...v,bw:fmtG(b.bw)}));return;}
+  if(k==='multi'&&b.bw>=2){const keep=(T.opts||[]).filter(x=>x<=b.bw/2).pop()||b.bw/2,was=b.bw;b.bw=keep;ntScale(b,was);clRenew(b,clFair(b));clNote('ren');out.ok.push(tr('lifecycle.multihomed_keeps',{...v,bw:fmtG(b.bw)}));return;}
   clGone(b,k);out.lost.push(tr(CL_WHY[k].left,v));}
 
 /* A day of contracts, after the moods. 30 days before a term ends a customer with competitors around may ask for a

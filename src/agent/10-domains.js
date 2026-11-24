@@ -39,6 +39,8 @@ const API_DOMAINS={
   // The optical engineering team (optxHire, optxMode…).
   optxSize:{table:'OPTX',kind:'key'},
   optxMode:{kind:'enum',values:['ask','auto']},
+  // A quote to a network asking for transit (Market Forces): list price, or 10% or 20% off.
+  quoteCut:{kind:'enum',values:()=>MF.net.cut.slice()},
   opsPopKind:{kind:'enum',values:()=>OPS_POP.slice()},
   opsTplKey:{kind:'enum',values:()=>OPS_TPL.slice()},
   // The three POP standards (#315).

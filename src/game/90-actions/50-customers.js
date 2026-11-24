@@ -4,7 +4,8 @@ Object.assign(ACT,{
    if(!w&&!p){toast(tr('customers.nothing_spare_to_sell_on_this'),'bad');sfx('err');return;}const L=l.list||(l.list={w:0,p:0});L.w+=w;L.p+=p;if(w)L.hw=(L.hw||0)+w;if(p)L.hp=(L.hp||0)+p;
    toast(tr('broker.listed',{a:CITY[l.a].name,b:CITY[l.b].name}),'good');sfx('click');after();},
  unlistFiber:({id})=>{const l=S.links.find(x=>x.id===id);if(!l||!l.list)return;delete l.list;sfx('click');after();},
- accept:({id,auto=false})=>{const o=S.offers.find(x=>x.id===id);if(!o)return;const customer=auto?autoOffer(o):offerCustomer(o);if(!customer)return;if(!bHas(o)){toast(tr('customers.you_need_a_pop_in_every'),'bad');return;}
+ // A network asking for a transit quote is answered with one (list price); the sales agents and the intern accept that way.
+ accept:({id,auto=false})=>{const o=S.offers.find(x=>x.id===id);if(!o)return;if(o.type==='ntr'){ACT.ntQuote({id,cut:0});return;}const customer=auto?autoOffer(o):offerCustomer(o);if(!customer)return;if(!bHas(o)){toast(tr('customers.you_need_a_pop_in_every'),'bad');return;}
    if(o.type==='wwave'){const l=S.links.find(x=>x.id===o.link);if(!l||chMax(l)-(l.ch||[]).length-soldSlots(l)<o.slots){toast(tr('customers.not_enough_free_channels_on_that'),'bad');return;}}
    if(BIZ_T[o.type].event&&S.day>=o.start){toast(tr('customers.too_late_the_event_has_already'),'bad');return;}
    // A carrier renting more alien waves on a fiber it already rents grows its contract, like a real order for extra waves,
@@ -16,6 +17,9 @@ Object.assign(ACT,{
    // The shark's commission: one month of what the deal pays, on signing.
    if(o.by==='shark'){const c=Math.round(bizMo(customer));if(c>0){S.cash-=c;toast(tr('sales.commission',{name:esc(o.name),cost:fmt$(c)}),'');}}
    floater(CITY[o.city].x,CITY[o.city].y-30,tr('common.signed'),'#16A866');sfx('coin');after();},
+ // Quote a network's request for transit (39-network-buyers.js): list price or a discount; it answers in a few days.
+ ntQuote:({id,cut})=>{const o=S.offers.find(x=>x.id===id);if(!o||o.type!=='ntr'||!o.rfq||o.rfq.q!==null||!MF.net.cut.includes(cut))return;
+   const w=MF.net.wait,due=S.day+w[0]+hstr(o.net+'|wait|'+o.rfq.r)%(w[1]-w[0]+1);o.rfq.q=cut;o.rfq.due=due;o.exp=Math.max(o.exp,due+1);sfx('click');after();},
  decline:({id})=>{if(salesOverride(S.offers.find(x=>x.id===id))){after();return;}S.offers=S.offers.filter(x=>x.id!==id);after();},
  dropBiz:({id})=>{const b0=S.biz.find(x=>x.id===id);if(!b0)return;if(BIZ_T[b0.type].event&&S.day>=b0.start){toast(tr('customers.the_event_is_already_running_the'),'bad');sfx('err');return;}if(UI.confirm!==id){UI.confirm=id;renderPanel();return;}S.biz=S.biz.filter(b=>b.id!==id);UI.confirm=null;after();},
 });

@@ -20,6 +20,9 @@ const dayAnswer=y=>y.dark?opsDarkTrial(y):offerTrial(y.trial,y.hx);
 const dayAgain=y=>{if(y.dark)return opsDarkAgain(y);const o=y.o;if(!o||!S.offers.includes(o))return null;const b=offerTrialOf(o);return b?offerTrial(b,offerHealthy(b)):null;};
 function dayGo(g,step=dayStep){let v;for(let s=step(g);!s.done;s=step(g,v)){v=undefined;const y=s.value;if(y===DAY_REST)continue;if(dayAsk(y))v=dayAnswer(y);else compute();}}
 function dayTick(){dayGo(dayRun());}
+// The day's chance of a new customer calling. In Market Forces a closed policy costs the free peering it gives up, not
+// customers: buyers of transit do not read peering policies.
+const offerOdds=()=>(0.05+0.01*(S.lvl||1))*(ppol()==='closed'&&!mfOn()?0.6:1)*(confSpOn()?SP_OFFERS:1)*salesSpawn();
 // dayPre(): the world's morning all at once; dayPreRun() the same with a place or two to let a frame through.
 function dayPre(){const g=dayPreRun();for(;;){const s=g.next();if(s.done)return s.value;}}
 function* dayPreRun(){
@@ -52,10 +55,12 @@ function* dayPreRun(){
   for(const c in S.pops){const p=S.pops[c];if(!p.bb)continue;const sf=sfOf(R,c)*((R.bbF&&R.bbF[c])??1),P=eyeP(c);
     if(sf>=0.9){const g=(CITY[c].be&&!(p.boost>d)?0.35:1)*0.025*(scnRule('boom')?1.5:1)*(p.boost>d?2:1)*sf*(0.7+0.6*(R.peerShare||0))*(CITY[c].reg==='AS'&&!CITY[c].cn?1.6:1);p.bb.d+=g*p.bb.d*(1-p.bb.d/P);}
     else p.bb.d=Math.max(Math.min(3,P),p.bb.d*(1-(0.9-sf)*0.04));}
+  ntDay(d);
   return d;}
 function* dayPost(d){
   yield* ddosNewsRun();ddosTrack();
   for(const t of S.transit){(t.hist=t.hist||[]).push(R.useT[t.id]||0);if(t.hist.length>30)t.hist.shift();}
+  if(mfOn())ntHist();
   S.cash+=(R.revMo-R.costMo)/monLen(d);
   S.stats.peak=Math.max(S.stats.peak,R.served);volDay();
   S.hist=S.hist||[];S.hist.push({d,dem:+R.demand.toFixed(2),srv:+R.served.toFixed(2),c:+(R.egT.c||0).toFixed(2),p:+(R.egT.p||0).toFixed(2),ix:+(R.egT.ix||0).toFixed(2),t:+(R.egT.t||0).toFixed(2),l2:+(R.egT.l2||0).toFixed(2),rev:Math.round(R.revMo),cost:Math.round(R.costMo),cash:Math.round(S.cash),inc:S.inc.length});if(S.hist.length>180)S.hist.shift();
@@ -98,7 +103,8 @@ function* dayPost(d){
   // offers
   S.offers=S.offers.filter(o=>o.exp>d);
   cmDay(d);
-  if(S.offers.length<5&&Math.random()<(0.05+0.01*(S.lvl||1))*(ppol()==='closed'?0.6:1)*(confSpOn()?SP_OFFERS:1)*salesSpawn()){const n0=S.offers.length;spawnOffer();mktPrice(n0);salesShape(n0);}
+  // Networks asking for transit quotes come on their own (ntDay) and leave room for everyone else.
+  if((mfOn()?S.offers.filter(o=>!ntT(o.type)).length:S.offers.length)<5&&Math.random()<offerOdds()){const n0=S.offers.length;spawnOffer();mktPrice(n0);salesShape(n0);}
   yield DAY_REST;
   // failures & events
   // Chaos (the rules) scales how often: calm waits about three times as long, spicy comes almost twice as often, none never.

@@ -3,9 +3,17 @@
    plain terrestrial circuit, and a circuit earns its premium from being hard to deliver (diverse, no sharks, two data
    centers), not from being a circuit. Every factor is here; the price sites ask these helpers, so Classic stays exact. */
 // demand: how often a wholesale buyer turns up, from the networks present in a city (see mfDemand()).
+// net: networks buying transit from you (39-network-buyers.js): from level lv; world, the Gbps all networks send, sizes
+// each (max at most); it commits to that share of it; shops every cyc days; answers a quote wait days later, at most
+// open requests at once, each open exp days; own: how much of its score is reach of your own; a quote's cut and how much it helps (cutW); Tier 1 and Tier 2 weigh t1
+// and t2, reselling its own upstream resell; failover multiplies its traffic by fo on bad days (foP of months); it
+// moves te a day toward teMin of its traffic while you drop it; wk: its weekly swing.
+// cone: paid peering for your cone, at rate of wholesale transit, for networks sending at least min Gbps.
 // rate: transit-type list prices; l2: the km-priced circuit formula; req: requirement bonuses on circuits;
 // buy: the transit you buy, flat for its first days, then cheaper by yr a year down to floor of its list price.
-const MF={rate:{isp:3,provedor:2.5,metav:1.5,cgame:1.3},l2:0.3,req:2,buy:{free:180,yr:0.08,floor:0.4},demand:{ref:1000,min:0.1}};
+const MF={rate:{isp:3,provedor:2.5,metav:1.5,cgame:1.3},l2:0.3,req:2,buy:{free:180,yr:0.08,floor:0.4},demand:{ref:1000,min:0.1},
+  net:{lv:3,world:400000,max:3200,commit:0.5,cyc:[365,730,1095],wait:[3,7],open:3,exp:14,own:0.6,cut:[0,0.1,0.2],cutW:[1,1.35,1.8],
+    t1:2,t2:1.4,resell:0.3,fo:1.6,foP:0.25,te:0.05,teMin:0.6,wk:0.08},cone:{rate:0.4,min:10}};
 const mfOn=()=>modeOn('forces');
 // Wholesale transit buyers (the MF.rate types) pay what transit costs where they are: in the mode their price follows
 // the city's transit price (regionMult(): 2.5× in Asia, 3× in Australia), as what you buy there does.

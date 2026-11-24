@@ -186,5 +186,37 @@ networks it is under 1 everywhere (tested). It gates random offers (`spawnOffer(
 the sales desk's golf game and referrals from existing customers are not gated. Classic draws no extra random
 numbers.
 
+**Status (phase 2, 2026-11-24):** done, in `src/game/60-features/39-network-buyers.js`, constants in `MF.net` and
+`MF.cone`. Decided with Jon: both halves at once; quote requests, one model for everyone (no option); multihoming (a
+buyer keeps its upstreams, so `CONE` stays static).
+
+- **Quote requests (`ntr`).** An `eye`/`t2` network with upstreams of its own, not China's, not another player's, that
+  shares a city with you asks on its own hashed cycle (1–3 years, `ntAsks()`), from level 3, at most 3 open. You decline
+  or quote list / −10% / −20% (`ACT.ntQuote`; Accept, the sales agents and the intern quote list). 3–7 days later it
+  scores you (`ntScore()`): reach (`reachSolo()`), 60% of it weighted by reach without transit, × Tier (2 / 1.4),
+  × diversity (the share of your transit providers that are its own upstreams cuts up to 70%), × service in that city,
+  × the cut's weight (1 / 1.35 / 1.8); win chance `s/(s+its upstreams)`, rolled by hash per round of shopping.
+  Probe: a 4-POP reseller of four Tier 1s wins about 15% at list and 22% at −20%.
+- **Traffic and bill.** Size `NSH × 400 Tbps × eraMul() × win share`, 10 G to 3.2 T; commit half of it. Daily usage
+  (`ntUseDay()`, before routing): weekly ±8%, ±10% noise, traffic engineering (down 0.05 a day to 0.6 while served
+  under 95%, back up after), and ×1.6 on failover days (a quarter of months, 1–3 days; a Cogentle de-peering). It is
+  customer demand in `compute()`; billed `max(commit, p95 of 30 daily samples of what crossed)` × rate, via `p95()`,
+  so one failover day is free and two are billed. `R.ntq` holds the percentile for the panels.
+- **Cone.** Each customer is a `'p'` exit (`ntExits()`, `fedplay.ex_customer`) reaching `CONE[net]`: reach, `R.nt`,
+  `R.cone` and `isTier1()` follow unchanged.
+- **Paid peering (`ncone`).** Nobody pays while you buy any transit (they reach you through your providers). Then
+  Selective: content networks; Closed: every `eye`/`t2`/`cdn`; never Tier 1s; not when one of its upstreams has a PNI
+  with you, it is in a customer's cone, or it already peers with you; only when its traffic to you
+  (`R.demand × NSH`) is at least 10 G. Asked half a cycle from its transit shopping, accepted like any offer, billed
+  like `ntr` at 40% of wholesale on what crosses its port; ends at its term once it can reach you free.
+- **Closed** keeps its 0.6× offer penalty only outside the mode (`offerOdds()`); in the mode the policy texts say
+  what Selective and Closed earn (`PPOL_D_MF`).
+- Perf (big-network fixture with the mode on and 45 network customers, against HEAD): `compute()` 23.7 → 25.4 ms
+  (+7%, p 0.36), `dayTick()` 28.7 → 31.8 ms (+11%, p 0.51), within noise. Classic: routing identical, no change.
+
+For step 4: tune `MF.net.world` (sizes) and the score weights in play; renewals don't re-score a network yet (they go
+through `clDay()` like any customer); paid peering realistically shows up only near Tier 1, since it needs you
+transit-free.
+
 Sources: TeleGeography IP transit and wavelength pricing posts (2025–26), Cogent FY2025 8-K, Meter and Lightyear DIA
 pricing, Lumen DIA marketplace.

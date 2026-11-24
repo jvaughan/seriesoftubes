@@ -32,7 +32,7 @@ function dlOffer(o,s){const k='o:'+o.id,op=dlOpen(k),left=o.exp-S.day,n=(o.reqs|
     :s===1&&un?`<div class="dl-st warn">${trn('deals.n_requirements_not_met',un)}</div>${reqList(o)}${reqFixHtml(o)}`:'';
   return `<div class="row dl-o"><div class="grow"><div class="nm">${esc(o.name)} <span class="dl-d${left<=DL_SOON?' soon':''}">${tr('ui.n_d_left',{n:left})}</span></div>
     <div class="meta">${esc(BIZ_T[o.type].l)} · ${CITY[o.city].name}${o.city2?' ⇄ '+CITY[o.city2].name:''} · <b>${bTerms(o)}</b></div>${line}${sky}${bRisk(o)}${op?more:''}
-    <div class="btns">${s?btn(tr('common.accept'),'accept',{id:o.id},sky?'ghost sm':'green sm'):btn(tr('common.go_there'),'focusCity',{city:miss[0]},'ghost sm')}${btn(tr('common.decline'),'decline',{id:o.id},'ghost sm')}${s===2?(more?tog(st):`<span class="dl-st ok">${st}</span>`):more?tog(tr('noc.details')):''}</div></div></div>`;}
+    <div class="btns">${ntOfferBtns(o)??(s?btn(tr('common.accept'),'accept',{id:o.id},sky?'ghost sm':'green sm'):btn(tr('common.go_there'),'focusCity',{city:miss[0]},'ghost sm'))}${btn(tr('common.decline'),'decline',{id:o.id},'ghost sm')}${s===2&&o.type!=='ntr'?(more?tog(st):`<span class="dl-st ok">${st}</span>`):more?tog(tr('noc.details')):''}</div></div></div>`;}
 function dlOffers(){const D=dlState(),all=S.offers.map(o=>[o,dlSt(o)]).sort((a,b)=>b[1]-a[1]||a[0].exp-b[0].exp);
   if(!all.length)return `<p class="empty">${S.biz.length?tr('hud_and_panels.no_open_offers_right_now_businesses'):tr('deals.no_offers_yet')}</p>`;
   const rd=all.filter(x=>x[1]===2).length,f=all.length>DL_PG?D.f:'all',rows=f==='ready'?all.filter(x=>x[1]===2):f==='work'?all.filter(x=>x[1]<2):all;

@@ -134,7 +134,7 @@ const CABLES=[
  {"id":"ccoast","name":"Connected Coast-er","price":0.8,"age":"new","blurb":tr('cables.fiber_along_british_columbia_s_coast'),"pairs":[["prr","van",[[-131,53.75],[-127,49],[-123.25,48.25]]]]},
  {"id":"skm","name":"SKM (Salmon, Kamchatka, More salmon)","price":1.2,"age":"mid","blurb":tr('cables.sakhalin_to_kamchatka_and_magadan_laid'),"pairs":[["uus","pkc",[[156.75,50.25],[159,52]]],["uus","gdx",[[144.75,48.5]]]]},
  {"id":"rjcn","name":"RJCN (Rather Jolly Cable to Niigata)","price":1.0,"age":"mid","blurb":tr('cables.nakhodka_to_niigata_across_the_sea'),"pairs":[["vvo","tok",[[133,42.6],[136,40],[138.2,37.3]]]]},
- {"id":"hscs","name":"Hokkaido Hop","price":1.0,"age":"mid","blurb":tr('cables.a_short_hop_from_sakhalin_to'),"pairs":[["uus","tok",[[143.5,46.75],[146,43.5],[141.5,35.75],[140.5,34.75],[139.75,35]]]]},
+ {"id":"hscs","name":"Hokkaido Hop","price":1.0,"age":"mid","blurb":tr('cables.a_short_hop_from_sakhalin_to'),"pairs":[["uus","tok",[[143.5,46.75],[146,43.5],[141.5,35.75],[140.5,34.75],[139.75,35]]],["uus","spk",[[141.6,46.6],[141.1,45.6],[140.9,44.5],[141.1,43.45]]]]},
  {"id":"chuk","name":"Chukchi Chuckle Line","price":1.3,"age":"new","blurb":tr('cables.petropavlovsk_to_anadyr_finished_in'),"pairs":[["pkc","dyr",[[160.25,53],[168.84,57.88],[179,61.75],[180.25,62.75],[178.5,64.5]]]]},
  {"id":"ecl","name":"EC-Link-ed","price":1.0,"age":"mid","blurb":tr('cables.cura_ao_to_trinidad_along_the'),"pairs":[["cur","pos",[[-68.5,12.4],[-64,12],[-61.7,10.9]]]]},
  {"id":"havsil","name":"HAVSIL-ent Night","price":0.85,"age":"new","blurb":tr('cables.kristiansand_to_jutland_a_quiet_short'),"pairs":[["krs","ebj",[[7.5,56]]]]},

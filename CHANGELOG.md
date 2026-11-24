@@ -6,6 +6,7 @@ All notable changes to this project are documented here. The project follows
 
 ## [Unreleased]
 
+- Sapporo is on the map, in new games and saves already under way. Hokkaido now joins the rest of Japan over land, through the fiber in the Seikan Tunnel. The Hokkaido Hop cable from Sakhalin also lands there, and Sapporo has an exchange of its own and a local ISP.
 - Settings can now show the real company behind each network, exchange, cable and router name. It is off by default and only changes what is shown; saves keep the game's names.
 - Networks far away can now buy a remote port into an exchange you founded. Each one is a circuit from one of your POPs to the exchange, carried on your backbone and paid per Gbps, and its network joins as a member and peers with you; an exchange takes up to half its fabric's member limit in remote ports, on top of its local members. Most requests come from fairly near, and a busy exchange draws networks from farther away than a new one.
 
